@@ -1,14 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mainPackage;
 
-/**
- *
- * @author kalou_000
- */
+import java.io.FileReader; //eisagwgh aparatetiton vivliothikon
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File; 
+
 public class textEditor extends javax.swing.JFrame {
 
     /**
@@ -16,6 +15,8 @@ public class textEditor extends javax.swing.JFrame {
      */
     public textEditor() {
         initComponents();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+        jFileChooser1.setFileFilter(filter);
     }
 
     /**
@@ -27,6 +28,8 @@ public class textEditor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser1 = new javax.swing.JFileChooser();
+        ErrorDialog1 = new javax.swing.JDialog();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -42,6 +45,19 @@ public class textEditor extends javax.swing.JFrame {
         formMenu = new javax.swing.JMenu();
         helpMenu = new javax.swing.JMenu();
 
+        ErrorDialog1.setTitle("Error Message");
+
+        javax.swing.GroupLayout ErrorDialog1Layout = new javax.swing.GroupLayout(ErrorDialog1.getContentPane());
+        ErrorDialog1.getContentPane().setLayout(ErrorDialog1Layout);
+        ErrorDialog1Layout.setHorizontalGroup(
+            ErrorDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        ErrorDialog1Layout.setVerticalGroup(
+            ErrorDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextArea1.setColumns(20);
@@ -50,11 +66,22 @@ public class textEditor extends javax.swing.JFrame {
 
         fileMenu.setText("File");
 
+        openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         openMenuItem.setText("Open");
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(openMenuItem);
 
         saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveMenuItem);
 
         printMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -103,6 +130,42 @@ public class textEditor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        // TODO add your handling code here:
+        FileReader fs;
+        int openFile = jFileChooser1.showOpenDialog(this);//me to showOpenDialog anoigw to parathiro gia epilgi Open
+        if(openFile == JFileChooser.APPROVE_OPTION){
+            
+            String fileName = jFileChooser1.getSelectedFile().getPath(); //tha apothikeusei sthn metavliti filename to arxeio me to path pou epileksame
+                try{
+                    fs = new FileReader(fileName); 
+                    jTextArea1.read(fs,null); //nul??
+                    fs.close();
+                    
+                } catch(IOException exc){
+                  // ErrorDialog1.showMessageDialog(exc.getMessage(),""); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
+                }
+        }
+          
+         
+    }//GEN-LAST:event_openMenuItemActionPerformed
+
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        // TODO add your handling code here:    
+                FileWriter fw;
+        int saveFile = jFileChooser1.showSaveDialog(this);
+        if(saveFile == JFileChooser.APPROVE_OPTION){
+            File fileName = jFileChooser1.getSelectedFile();              
+            try{
+                    fw = new FileWriter(fileName);
+                    jTextArea1.write(fw); 
+                    fw.close();
+                } catch(IOException exc){
+                  // ErrorDialog1.showExceptionDialog(exc.getMessage()); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
+                }
+        }
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -139,10 +202,12 @@ public class textEditor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog ErrorDialog1;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu formMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
