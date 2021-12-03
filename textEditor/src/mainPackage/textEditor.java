@@ -1,12 +1,14 @@
 
 package mainPackage;
 
+import java.awt.print.PrinterException;
 import java.io.FileReader; //eisagwgh aparatetiton vivliothikon
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
+import javax.swing.JOptionPane;
 
 public class textEditor extends javax.swing.JFrame {
 
@@ -30,6 +32,7 @@ public class textEditor extends javax.swing.JFrame {
 
         jFileChooser1 = new javax.swing.JFileChooser();
         ErrorDialog1 = new javax.swing.JDialog();
+        PrintErrorDialog = new javax.swing.JDialog();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -55,6 +58,17 @@ public class textEditor extends javax.swing.JFrame {
         );
         ErrorDialog1Layout.setVerticalGroup(
             ErrorDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout PrintErrorDialogLayout = new javax.swing.GroupLayout(PrintErrorDialog.getContentPane());
+        PrintErrorDialog.getContentPane().setLayout(PrintErrorDialogLayout);
+        PrintErrorDialogLayout.setHorizontalGroup(
+            PrintErrorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        PrintErrorDialogLayout.setVerticalGroup(
+            PrintErrorDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
@@ -86,6 +100,11 @@ public class textEditor extends javax.swing.JFrame {
 
         printMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         printMenuItem.setText("Print");
+        printMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(printMenuItem);
 
         newMenuItem.setText("New");
@@ -95,7 +114,7 @@ public class textEditor extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("cut");
         editMenu.add(jMenuItem1);
 
         jMenuItem2.setText("jMenuItem2");
@@ -152,7 +171,7 @@ public class textEditor extends javax.swing.JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         // TODO add your handling code here:    
-                FileWriter fw;
+        FileWriter fw;
         int saveFile = jFileChooser1.showSaveDialog(this);
         if(saveFile == JFileChooser.APPROVE_OPTION){
             File fileName = jFileChooser1.getSelectedFile();              
@@ -165,6 +184,26 @@ public class textEditor extends javax.swing.JFrame {
                 }
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void printMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printMenuItemActionPerformed
+        //Print file
+        try {
+                boolean complete = jTextArea1.print();
+            if (complete) {
+                /* show a success message  */
+                JOptionPane.showMessageDialog(super.rootPane, "The file was printed succefully",
+               "Swing Tester", JOptionPane.PLAIN_MESSAGE);
+            } else {
+            /*show a message indicating that printing was cancelled */
+                JOptionPane.showMessageDialog(super.rootPane, "Printing was canceled!",
+               "textEditor", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (PrinterException pe) {
+        /* Printing failed, report to the user */
+            JOptionPane.showMessageDialog(super.rootPane, "Printing failed!!!",
+            "Swing Tester", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_printMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,6 +242,7 @@ public class textEditor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog ErrorDialog1;
+    private javax.swing.JDialog PrintErrorDialog;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu formMenu;
