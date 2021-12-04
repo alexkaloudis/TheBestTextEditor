@@ -1,6 +1,9 @@
 
 package mainPackage;
 
+import javax.swing.event.UndoableEditListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.undo.UndoManager;
 import java.awt.print.PrinterException;
 import java.io.FileReader; //eisagwgh aparatetiton vivliothikon
 import java.io.FileWriter;
@@ -9,9 +12,10 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class textEditor extends javax.swing.JFrame {
-
+  UndoManager undoManager = new UndoManager();
     /**
      * Creates new form textEditor
      */
@@ -19,7 +23,13 @@ public class textEditor extends javax.swing.JFrame {
         initComponents();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         jFileChooser1.setFileFilter(filter);
+        
+         
+         jTextArea1.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
     }
+         
+  
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,18 +43,29 @@ public class textEditor extends javax.swing.JFrame {
         jFileChooser1 = new javax.swing.JFileChooser();
         ErrorDialog1 = new javax.swing.JDialog();
         PrintErrorDialog = new javax.swing.JDialog();
+        RightClickPopUpMenu = new javax.swing.JPopupMenu();
+        UndoRClick = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        CutRClick = new javax.swing.JMenuItem();
+        CopyRClick = new javax.swing.JMenuItem();
+        PasteRClick = new javax.swing.JMenuItem();
+        DeleteRClick = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         printMenuItem = new javax.swing.JMenuItem();
-        newMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        undoKey = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        cutKey = new javax.swing.JMenuItem();
+        copyKey = new javax.swing.JMenuItem();
+        pasteKey = new javax.swing.JMenuItem();
+        deleteKey = new javax.swing.JMenuItem();
         formMenu = new javax.swing.JMenu();
         helpMenu = new javax.swing.JMenu();
 
@@ -72,15 +93,71 @@ public class textEditor extends javax.swing.JFrame {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
+        UndoRClick.setText("Undo");
+        UndoRClick.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UndoRClickActionPerformed(evt);
+            }
+        });
+        RightClickPopUpMenu.add(UndoRClick);
+        RightClickPopUpMenu.add(jSeparator2);
+
+        CutRClick.setText("Cut");
+        CutRClick.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CutRClickActionPerformed(evt);
+            }
+        });
+        RightClickPopUpMenu.add(CutRClick);
+
+        CopyRClick.setText("Copy");
+        CopyRClick.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CopyRClickActionPerformed(evt);
+            }
+        });
+        RightClickPopUpMenu.add(CopyRClick);
+
+        PasteRClick.setText("Paste");
+        PasteRClick.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PasteRClickActionPerformed(evt);
+            }
+        });
+        RightClickPopUpMenu.add(PasteRClick);
+
+        DeleteRClick.setText("Delete");
+        DeleteRClick.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteRClickActionPerformed(evt);
+            }
+        });
+        RightClickPopUpMenu.add(DeleteRClick);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
+        jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextArea1MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTextArea1MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTextArea1MouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextArea1);
 
         fileMenu.setText("File");
 
+        newMenuItem.setText("New");
+        fileMenu.add(newMenuItem);
+
         openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        openMenuItem.setMnemonic('o');
         openMenuItem.setText("Open");
         openMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,6 +175,9 @@ public class textEditor extends javax.swing.JFrame {
         });
         fileMenu.add(saveMenuItem);
 
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+        fileMenu.add(jSeparator1);
+
         printMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         printMenuItem.setText("Print");
         printMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -107,21 +187,60 @@ public class textEditor extends javax.swing.JFrame {
         });
         fileMenu.add(printMenuItem);
 
-        newMenuItem.setText("New");
-        fileMenu.add(newMenuItem);
-
         menuBar.add(fileMenu);
 
         editMenu.setText("Edit");
+        editMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMenuActionPerformed(evt);
+            }
+        });
 
-        jMenuItem1.setText("cut");
-        editMenu.add(jMenuItem1);
+        undoKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        undoKey.setText("Undo");
+        undoKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoKeyActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoKey);
+        editMenu.add(jSeparator3);
 
-        jMenuItem2.setText("jMenuItem2");
-        editMenu.add(jMenuItem2);
+        cutKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        cutKey.setText("Cut");
+        cutKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cutKeyActionPerformed(evt);
+            }
+        });
+        editMenu.add(cutKey);
 
-        jMenuItem3.setText("jMenuItem3");
-        editMenu.add(jMenuItem3);
+        copyKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        copyKey.setText("Copy");
+        copyKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyKeyActionPerformed(evt);
+            }
+        });
+        editMenu.add(copyKey);
+
+        pasteKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        pasteKey.setText("Paste");
+        pasteKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteKeyActionPerformed(evt);
+            }
+        });
+        editMenu.add(pasteKey);
+
+        deleteKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        deleteKey.setText("Delete");
+        deleteKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteKeyActionPerformed(evt);
+            }
+        });
+        editMenu.add(deleteKey);
 
         menuBar.add(editMenu);
 
@@ -159,6 +278,7 @@ public class textEditor extends javax.swing.JFrame {
                 try{
                     fs = new FileReader(fileName); 
                     jTextArea1.read(fs,null); //nul??
+                    setTitle(fileName); //allazei titlo symfona me to arxeio.Deixnei to plires path kai onoma toy arxeiou 
                     fs.close();
                     
                 } catch(IOException exc){
@@ -180,7 +300,7 @@ public class textEditor extends javax.swing.JFrame {
                     jTextArea1.write(fw); 
                     fw.close();
                 } catch(IOException exc){
-                  // ErrorDialog1.showExceptionDialog(exc.getMessage()); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
+                 //  ErrorDialog1.showMessageDialog(super.rootPane,"Save failed","",ErrorDialog1.ERROR_MESSAGE); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
                 }
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
@@ -204,6 +324,82 @@ public class textEditor extends javax.swing.JFrame {
             "Swing Tester", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_printMenuItemActionPerformed
+
+    private void cutKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutKeyActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.cut();
+    }//GEN-LAST:event_cutKeyActionPerformed
+
+    private void copyKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyKeyActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.copy();
+    }//GEN-LAST:event_copyKeyActionPerformed
+
+    private void pasteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteKeyActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.paste();       
+    }//GEN-LAST:event_pasteKeyActionPerformed
+
+    private void deleteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteKeyActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.setText(jTextArea1.getText().replace(jTextArea1.getSelectedText(),""));
+    }//GEN-LAST:event_deleteKeyActionPerformed
+
+    private void undoKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoKeyActionPerformed
+        // TODO add your handling code here:
+        if (undoManager.canUndo()) {
+          undoManager.undo();
+        }
+
+    }//GEN-LAST:event_undoKeyActionPerformed
+
+    private void jTextArea1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseReleased
+
+               if(evt.isPopupTrigger()){
+                   RightClickPopUpMenu.show(this,evt.getX(),evt.getY());
+                 }
+    }//GEN-LAST:event_jTextArea1MouseReleased
+
+    private void jTextArea1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MousePressed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTextArea1MousePressed
+
+    private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextArea1MouseClicked
+
+    private void UndoRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoRClickActionPerformed
+      //  undoKeyActionPerformed(evt); //kalei tin arxikh methodo
+        
+        if (undoManager.canUndo()) {  //to kanei apo thn arxh
+          undoManager.undo();
+        }
+    }//GEN-LAST:event_UndoRClickActionPerformed
+
+    private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editMenuActionPerformed
+
+    private void CutRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CutRClickActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.cut();
+    }//GEN-LAST:event_CutRClickActionPerformed
+
+    private void PasteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasteRClickActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.paste();   
+    }//GEN-LAST:event_PasteRClickActionPerformed
+
+    private void CopyRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CopyRClickActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.copy();
+    }//GEN-LAST:event_CopyRClickActionPerformed
+
+    private void DeleteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteRClickActionPerformed
+        // TODO add your handling code here:
+        jTextArea1.setText(jTextArea1.getText().replace(jTextArea1.getSelectedText(),""));
+    }//GEN-LAST:event_DeleteRClickActionPerformed
 
     /**
      * @param args the command line arguments
@@ -241,22 +437,33 @@ public class textEditor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem CopyRClick;
+    private javax.swing.JMenuItem CutRClick;
+    private javax.swing.JMenuItem DeleteRClick;
     private javax.swing.JDialog ErrorDialog1;
+    private javax.swing.JMenuItem PasteRClick;
     private javax.swing.JDialog PrintErrorDialog;
+    private javax.swing.JPopupMenu RightClickPopUpMenu;
+    private javax.swing.JMenuItem UndoRClick;
+    private javax.swing.JMenuItem copyKey;
+    private javax.swing.JMenuItem cutKey;
+    private javax.swing.JMenuItem deleteKey;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu formMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JFileChooser jFileChooser1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem pasteKey;
     private javax.swing.JMenuItem printMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem undoKey;
     // End of variables declaration//GEN-END:variables
 }
