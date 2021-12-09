@@ -1,6 +1,7 @@
 
 package mainPackage;
 
+import java.awt.Component;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -13,9 +14,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.PopupFactory;
+import javax.swing.WindowConstants;
 
 public class textEditor extends javax.swing.JFrame {
   UndoManager undoManager = new UndoManager();
+  private Font []font;
     /**
      * Creates new form textEditor
      */
@@ -23,9 +32,14 @@ public class textEditor extends javax.swing.JFrame {
         initComponents();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         jFileChooser1.setFileFilter(filter);
-        
-         
-         jTextArea1.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
+        fontsFrame.setVisible(false);
+        jTextArea1.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
+        font=new Font[fonts.length];
+        //loop ston pinaka me ta font Strings
+        //dhmiourgia pinaka Font
+        for (int i=0;i<fonts.length;i++) {
+            font[i]=new Font(fonts[i], Font.PLAIN,12);
+        }
     }
          
   
@@ -39,6 +53,7 @@ public class textEditor extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jFileChooser1 = new javax.swing.JFileChooser();
         ErrorDialog1 = new javax.swing.JDialog();
@@ -50,6 +65,16 @@ public class textEditor extends javax.swing.JFrame {
         CopyRClick = new javax.swing.JMenuItem();
         PasteRClick = new javax.swing.JMenuItem();
         DeleteRClick = new javax.swing.JMenuItem();
+        jButton2 = new javax.swing.JButton();
+        fontsFrame = new javax.swing.JFrame();
+        fontLb = new javax.swing.JLabel();
+        styleLb = new javax.swing.JLabel();
+        sizeLb = new javax.swing.JLabel();
+        fontCB = new javax.swing.JComboBox<String>(fonts);
+        styleCB = new javax.swing.JComboBox<>();
+        sizeCB = new javax.swing.JComboBox<>();
+        cancelButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -67,6 +92,8 @@ public class textEditor extends javax.swing.JFrame {
         pasteKey = new javax.swing.JMenuItem();
         deleteKey = new javax.swing.JMenuItem();
         formMenu = new javax.swing.JMenu();
+        textPropertiesMenu = new javax.swing.JMenu();
+        fontItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
 
         ErrorDialog1.setTitle("Error Message");
@@ -133,6 +160,83 @@ public class textEditor extends javax.swing.JFrame {
             }
         });
         RightClickPopUpMenu.add(DeleteRClick);
+
+        jButton2.setText("jButton2");
+
+        fontsFrame.setMinimumSize(new java.awt.Dimension(400, 300));
+        fontsFrame.setPreferredSize(new java.awt.Dimension(250, 250));
+        fontsFrame.setSize(new java.awt.Dimension(500, 450));
+        fontsFrame.setType(java.awt.Window.Type.POPUP);
+        fontsFrame.getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        fontLb.setText("Font");
+        fontsFrame.getContentPane().add(fontLb, new java.awt.GridBagConstraints());
+
+        styleLb.setText("Style");
+        fontsFrame.getContentPane().add(styleLb, new java.awt.GridBagConstraints());
+
+        sizeLb.setText("Size");
+        fontsFrame.getContentPane().add(sizeLb, new java.awt.GridBagConstraints());
+
+        DefaultComboBoxModel dml= new DefaultComboBoxModel();
+        for (int i = 0; i < fonts.length; i++) {
+            dml.addElement(fonts[i]);
+        }
+        fontCB.setModel(dml);
+        fontCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontCBActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 22;
+        gridBagConstraints.ipady = 5;
+        fontsFrame.getContentPane().add(fontCB, gridBagConstraints);
+
+        styleCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bold", "Italic", "Undeline"}));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 2;
+        gridBagConstraints.ipady = 7;
+        fontsFrame.getContentPane().add(styleCB, gridBagConstraints);
+
+        sizeCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "6", "7", "8","9","10","11","12","14","16","18","20","22","24","26","28" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipady = 8;
+        fontsFrame.getContentPane().add(sizeCB, gridBagConstraints);
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.weighty = 0.9;
+        fontsFrame.getContentPane().add(cancelButton, gridBagConstraints);
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        fontsFrame.getContentPane().add(okButton, gridBagConstraints);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -206,7 +310,7 @@ public class textEditor extends javax.swing.JFrame {
         editMenu.add(undoKey);
         editMenu.add(jSeparator3);
 
-        cutKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        cutKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         cutKey.setText("Cut");
         cutKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,7 +319,7 @@ public class textEditor extends javax.swing.JFrame {
         });
         editMenu.add(cutKey);
 
-        copyKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        copyKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         copyKey.setText("Copy");
         copyKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -224,7 +328,7 @@ public class textEditor extends javax.swing.JFrame {
         });
         editMenu.add(copyKey);
 
-        pasteKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        pasteKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         pasteKey.setText("Paste");
         pasteKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,7 +348,20 @@ public class textEditor extends javax.swing.JFrame {
 
         menuBar.add(editMenu);
 
-        formMenu.setText("Form");
+        formMenu.setText("Format");
+
+        textPropertiesMenu.setText("Text properties");
+
+        fontItem.setText("Font");
+        fontItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontItemActionPerformed(evt);
+            }
+        });
+        textPropertiesMenu.add(fontItem);
+
+        formMenu.add(textPropertiesMenu);
+
         menuBar.add(formMenu);
 
         helpMenu.setText("Help");
@@ -260,9 +377,7 @@ public class textEditor extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
         );
 
         pack();
@@ -353,42 +468,18 @@ public class textEditor extends javax.swing.JFrame {
 
     }//GEN-LAST:event_undoKeyActionPerformed
 
-    private void jTextArea1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseReleased
-
-               if(evt.isPopupTrigger()){
-                   RightClickPopUpMenu.show(this,evt.getX(),evt.getY());
-                 }
-    }//GEN-LAST:event_jTextArea1MouseReleased
-
-    private void jTextArea1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MousePressed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jTextArea1MousePressed
-
-    private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextArea1MouseClicked
-
-    private void UndoRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoRClickActionPerformed
-      //  undoKeyActionPerformed(evt); //kalei tin arxikh methodo
-        
-        if (undoManager.canUndo()) {  //to kanei apo thn arxh
-          undoManager.undo();
-        }
-    }//GEN-LAST:event_UndoRClickActionPerformed
-
     private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_editMenuActionPerformed
 
-    private void CutRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CutRClickActionPerformed
+    private void DeleteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.cut();
-    }//GEN-LAST:event_CutRClickActionPerformed
+        jTextArea1.setText(jTextArea1.getText().replace(jTextArea1.getSelectedText(),""));
+    }//GEN-LAST:event_DeleteRClickActionPerformed
 
     private void PasteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasteRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.paste();   
+        jTextArea1.paste();
     }//GEN-LAST:event_PasteRClickActionPerformed
 
     private void CopyRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CopyRClickActionPerformed
@@ -396,10 +487,59 @@ public class textEditor extends javax.swing.JFrame {
         jTextArea1.copy();
     }//GEN-LAST:event_CopyRClickActionPerformed
 
-    private void DeleteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteRClickActionPerformed
+    private void CutRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CutRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.setText(jTextArea1.getText().replace(jTextArea1.getSelectedText(),""));
-    }//GEN-LAST:event_DeleteRClickActionPerformed
+        jTextArea1.cut();
+    }//GEN-LAST:event_CutRClickActionPerformed
+
+    private void UndoRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoRClickActionPerformed
+        //  undoKeyActionPerformed(evt); //kalei tin arxikh methodo
+
+        if (undoManager.canUndo()) {  //to kanei apo thn arxh
+            undoManager.undo();
+        }
+    }//GEN-LAST:event_UndoRClickActionPerformed
+
+    private void jTextArea1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseReleased
+
+        if(evt.isPopupTrigger()){
+            RightClickPopUpMenu.show(this,evt.getX(),evt.getY());
+        }
+    }//GEN-LAST:event_jTextArea1MouseReleased
+
+    private void jTextArea1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextArea1MousePressed
+
+    private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextArea1MouseClicked
+
+    private void fontItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontItemActionPerformed
+        //otan o xrhsths kanei click sthn epilogh font tote anoigei to frame gia thn epilogh twn font
+        fontsFrame.setVisible(true);
+        fontsFrame.setSize(200,200);
+        
+    }//GEN-LAST:event_fontItemActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        /*otan o xrhsths pataei to cancel tote to parathuro kleinei xwris na 
+        orisei kapoia allag sto keimeno*/
+        fontsFrame.setVisible(false);
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void fontCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontCBActionPerformed
+      //loop ston pinaka me ta font Strings
+      //dhmiourgia pinaka Font
+       
+    }//GEN-LAST:event_fontCBActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        // TODO add your handling code here:
+        int fontIdx =fontCB.getSelectedIndex();
+        jTextArea1.setFont(font[fontIdx]);
+        fontsFrame.setVisible(false);
+    }//GEN-LAST:event_okButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -427,15 +567,16 @@ public class textEditor extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(textEditor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new textEditor().setVisible(true);
+
             }
         });
     }
-
+    String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem CopyRClick;
     private javax.swing.JMenuItem CutRClick;
@@ -445,13 +586,19 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JDialog PrintErrorDialog;
     private javax.swing.JPopupMenu RightClickPopUpMenu;
     private javax.swing.JMenuItem UndoRClick;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JMenuItem copyKey;
     private javax.swing.JMenuItem cutKey;
     private javax.swing.JMenuItem deleteKey;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JComboBox<String> fontCB;
+    private javax.swing.JMenuItem fontItem;
+    private javax.swing.JLabel fontLb;
+    private javax.swing.JFrame fontsFrame;
     private javax.swing.JMenu formMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JButton jButton2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -460,10 +607,16 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
+    private javax.swing.JButton okButton;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteKey;
     private javax.swing.JMenuItem printMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JComboBox<String> sizeCB;
+    private javax.swing.JLabel sizeLb;
+    private javax.swing.JComboBox<String> styleCB;
+    private javax.swing.JLabel styleLb;
+    private javax.swing.JMenu textPropertiesMenu;
     private javax.swing.JMenuItem undoKey;
     // End of variables declaration//GEN-END:variables
 }
