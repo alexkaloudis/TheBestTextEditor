@@ -1,7 +1,6 @@
 
 package mainPackage;
 
-import java.awt.Component;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -13,18 +12,19 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.PopupFactory;
-import javax.swing.WindowConstants;
+
 
 public class textEditor extends javax.swing.JFrame {
   UndoManager undoManager = new UndoManager();
+  //dhmiourgia pinaka Font
   private Font []font;
+  
     /**
      * Creates new form textEditor
      */
@@ -32,14 +32,15 @@ public class textEditor extends javax.swing.JFrame {
         initComponents();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         jFileChooser1.setFileFilter(filter);
+        /*orismos ws arxikhs katastashs-->
+        tou frame gia thn epilogh twn font*/
         fontsFrame.setVisible(false);
         jTextArea1.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
+        /*dhlwsh enos pinaka font-->
+        me mhkos to mhkos tou pinaka-->
+        me ta onomata twn font se morfh string*/
         font=new Font[fonts.length];
-        //loop ston pinaka me ta font Strings
-        //dhmiourgia pinaka Font
-        for (int i=0;i<fonts.length;i++) {
-            font[i]=new Font(fonts[i], Font.PLAIN,12);
-        }
+        
     }
          
   
@@ -164,7 +165,6 @@ public class textEditor extends javax.swing.JFrame {
         jButton2.setText("jButton2");
 
         fontsFrame.setMinimumSize(new java.awt.Dimension(400, 300));
-        fontsFrame.setPreferredSize(new java.awt.Dimension(250, 250));
         fontsFrame.setSize(new java.awt.Dimension(500, 450));
         fontsFrame.setType(java.awt.Window.Type.POPUP);
         fontsFrame.getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -183,11 +183,6 @@ public class textEditor extends javax.swing.JFrame {
             dml.addElement(fonts[i]);
         }
         fontCB.setModel(dml);
-        fontCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fontCBActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -196,7 +191,7 @@ public class textEditor extends javax.swing.JFrame {
         gridBagConstraints.ipady = 5;
         fontsFrame.getContentPane().add(fontCB, gridBagConstraints);
 
-        styleCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bold", "Italic", "Undeline"}));
+        styleCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Default","Bold", "Italic", "Underlined"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -377,7 +372,7 @@ public class textEditor extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
         );
 
         pack();
@@ -427,7 +422,7 @@ public class textEditor extends javax.swing.JFrame {
             if (complete) {
                 /* show a success message  */
                 JOptionPane.showMessageDialog(super.rootPane, "The file was printed succefully",
-               "Swing Tester", JOptionPane.PLAIN_MESSAGE);
+               "textEditor", JOptionPane.PLAIN_MESSAGE);
             } else {
             /*show a message indicating that printing was cancelled */
                 JOptionPane.showMessageDialog(super.rootPane, "Printing was canceled!",
@@ -436,7 +431,7 @@ public class textEditor extends javax.swing.JFrame {
         } catch (PrinterException pe) {
         /* Printing failed, report to the user */
             JOptionPane.showMessageDialog(super.rootPane, "Printing failed!!!",
-            "Swing Tester", JOptionPane.ERROR_MESSAGE);
+            "textEditor", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_printMenuItemActionPerformed
 
@@ -509,6 +504,7 @@ public class textEditor extends javax.swing.JFrame {
 
     private void jTextArea1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MousePressed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jTextArea1MousePressed
 
     private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
@@ -528,16 +524,53 @@ public class textEditor extends javax.swing.JFrame {
         fontsFrame.setVisible(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void fontCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontCBActionPerformed
-      //loop ston pinaka me ta font Strings
-      //dhmiourgia pinaka Font
-       
-    }//GEN-LAST:event_fontCBActionPerformed
-
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
+        
+        //pairnoume thn timh tou style combobox
+        String styleItem=styleCB.getSelectedItem().toString();
+       
+        // pairnoume thn timh tou size combobox
+        int letterSize=Integer.parseInt(sizeCB.getSelectedItem().toString());
+        
+        /*loop ston pinaka me ta font Strings-->
+        gemisma tou pinaka font typou Font-->
+        me th vohtheia tou pinaka fonts typou String*/
+        for (int i=0;i<fonts.length;i++) {
+            switch (styleItem) {
+                //metatroph se bold
+                case "Bold":
+                    font[i]=new Font(fonts[i],Font.BOLD,letterSize);
+                    break;
+                //metatroph se italic
+                case "Italic":
+                    font[i]=new Font(fonts[i],Font.ITALIC,letterSize);
+                    break;
+                //metatroph se underlined
+                case "Underlined":
+                    font[i]=new Font(fonts[i],Font.PLAIN,letterSize);
+                    Map<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
+                    map.put(TextAttribute.FONT, font[i]);
+                    map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    font[i] = Font.getFont(map);
+                    jTextArea1.setFont(font[i]);
+                    break;
+                default:
+                    font[i]=new Font(fonts[i],Font.PLAIN,letterSize);
+                    break;
+            }
+        }
+        
+        /*pairnoume to index apo to stoixeio
+        pou exei epileksei o xrhsths sto combo
+        box me ta font*/
         int fontIdx =fontCB.getSelectedIndex();
+        
+        /*orizoume to font me to index pou dialekse
+        o xrhsths se sunduasmo me ton pinaka twn font
+        typou Font*/
         jTextArea1.setFont(font[fontIdx]);
+        
+        //kryvoume to frame
         fontsFrame.setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -576,7 +609,10 @@ public class textEditor extends javax.swing.JFrame {
             }
         });
     }
-    String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+    /* dhlwsh enos pinaka typou String
+    pou gemizei me ta onomata twn diathesimwn
+    font pou einai diathesima sthn Java*/
+    private String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem CopyRClick;
     private javax.swing.JMenuItem CutRClick;
