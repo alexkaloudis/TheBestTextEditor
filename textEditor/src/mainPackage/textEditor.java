@@ -1,7 +1,13 @@
 
 package mainPackage;
 
+<<<<<<< HEAD
+
+import javax.swing.text.BadLocationException;
+import java.awt.Color;
 import java.awt.Component;
+=======
+>>>>>>> d4dd82602e5dc29dbd172131a66e1b9f5982a18e
 import javax.swing.event.UndoableEditListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -13,18 +19,26 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
+<<<<<<< HEAD
 import javax.swing.PopupFactory;
 import javax.swing.WindowConstants;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+=======
+
+>>>>>>> d4dd82602e5dc29dbd172131a66e1b9f5982a18e
 
 public class textEditor extends javax.swing.JFrame {
   UndoManager undoManager = new UndoManager();
+  //dhmiourgia pinaka Font
   private Font []font;
+  
     /**
      * Creates new form textEditor
      */
@@ -32,14 +46,15 @@ public class textEditor extends javax.swing.JFrame {
         initComponents();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         jFileChooser1.setFileFilter(filter);
+        /*orismos ws arxikhs katastashs-->
+        tou frame gia thn epilogh twn font*/
         fontsFrame.setVisible(false);
         jTextArea1.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
+        /*dhlwsh enos pinaka font-->
+        me mhkos to mhkos tou pinaka-->
+        me ta onomata twn font se morfh string*/
         font=new Font[fonts.length];
-        //loop ston pinaka me ta font Strings
-        //dhmiourgia pinaka Font
-        for (int i=0;i<fonts.length;i++) {
-            font[i]=new Font(fonts[i], Font.PLAIN,12);
-        }
+        
     }
          
   
@@ -75,6 +90,14 @@ public class textEditor extends javax.swing.JFrame {
         sizeCB = new javax.swing.JComboBox<>();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
+        findTextFrame = new javax.swing.JFrame();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        findTextFrameFindNextButton = new javax.swing.JButton();
+        FindTextFrameCancelButton = new javax.swing.JButton();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        replaceTextFrameButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -91,6 +114,7 @@ public class textEditor extends javax.swing.JFrame {
         copyKey = new javax.swing.JMenuItem();
         pasteKey = new javax.swing.JMenuItem();
         deleteKey = new javax.swing.JMenuItem();
+        FindKey = new javax.swing.JMenuItem();
         formMenu = new javax.swing.JMenu();
         textPropertiesMenu = new javax.swing.JMenu();
         fontItem = new javax.swing.JMenuItem();
@@ -164,7 +188,6 @@ public class textEditor extends javax.swing.JFrame {
         jButton2.setText("jButton2");
 
         fontsFrame.setMinimumSize(new java.awt.Dimension(400, 300));
-        fontsFrame.setPreferredSize(new java.awt.Dimension(250, 250));
         fontsFrame.setSize(new java.awt.Dimension(500, 450));
         fontsFrame.setType(java.awt.Window.Type.POPUP);
         fontsFrame.getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -183,11 +206,6 @@ public class textEditor extends javax.swing.JFrame {
             dml.addElement(fonts[i]);
         }
         fontCB.setModel(dml);
-        fontCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fontCBActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -196,7 +214,7 @@ public class textEditor extends javax.swing.JFrame {
         gridBagConstraints.ipady = 5;
         fontsFrame.getContentPane().add(fontCB, gridBagConstraints);
 
-        styleCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bold", "Italic", "Undeline"}));
+        styleCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Default","Bold", "Italic", "Underlined"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -237,6 +255,85 @@ public class textEditor extends javax.swing.JFrame {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 8;
         fontsFrame.getContentPane().add(okButton, gridBagConstraints);
+
+        findTextFrame.setTitle("Find");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Find what:");
+
+        findTextFrameFindNextButton.setText("Find Next");
+        findTextFrameFindNextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findTextFrameFindNextButtonActionPerformed(evt);
+            }
+        });
+
+        FindTextFrameCancelButton.setText("Cancel");
+        FindTextFrameCancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FindTextFrameCancelButtonActionPerformed(evt);
+            }
+        });
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Replace with:");
+
+        replaceTextFrameButton.setText("Replace");
+        replaceTextFrameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceTextFrameButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout findTextFrameLayout = new javax.swing.GroupLayout(findTextFrame.getContentPane());
+        findTextFrame.getContentPane().setLayout(findTextFrameLayout);
+        findTextFrameLayout.setHorizontalGroup(
+            findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(findTextFrameLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(FindTextFrameCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(findTextFrameLayout.createSequentialGroup()
+                        .addGroup(findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41)
+                        .addGroup(findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(findTextFrameFindNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(replaceTextFrameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        findTextFrameLayout.setVerticalGroup(
+            findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(findTextFrameLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(findTextFrameFindNextButton)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(findTextFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(replaceTextFrameButton))
+                .addGap(18, 18, 18)
+                .addComponent(FindTextFrameCancelButton)
+                .addGap(20, 20, 20))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -346,6 +443,15 @@ public class textEditor extends javax.swing.JFrame {
         });
         editMenu.add(deleteKey);
 
+        FindKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        FindKey.setText("Find...");
+        FindKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FindKeyActionPerformed(evt);
+            }
+        });
+        editMenu.add(FindKey);
+
         menuBar.add(editMenu);
 
         formMenu.setText("Format");
@@ -377,7 +483,7 @@ public class textEditor extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
         );
 
         pack();
@@ -427,7 +533,7 @@ public class textEditor extends javax.swing.JFrame {
             if (complete) {
                 /* show a success message  */
                 JOptionPane.showMessageDialog(super.rootPane, "The file was printed succefully",
-               "Swing Tester", JOptionPane.PLAIN_MESSAGE);
+               "textEditor", JOptionPane.PLAIN_MESSAGE);
             } else {
             /*show a message indicating that printing was cancelled */
                 JOptionPane.showMessageDialog(super.rootPane, "Printing was canceled!",
@@ -436,7 +542,7 @@ public class textEditor extends javax.swing.JFrame {
         } catch (PrinterException pe) {
         /* Printing failed, report to the user */
             JOptionPane.showMessageDialog(super.rootPane, "Printing failed!!!",
-            "Swing Tester", JOptionPane.ERROR_MESSAGE);
+            "textEditor", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_printMenuItemActionPerformed
 
@@ -509,6 +615,7 @@ public class textEditor extends javax.swing.JFrame {
 
     private void jTextArea1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MousePressed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jTextArea1MousePressed
 
     private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
@@ -518,8 +625,7 @@ public class textEditor extends javax.swing.JFrame {
     private void fontItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontItemActionPerformed
         //otan o xrhsths kanei click sthn epilogh font tote anoigei to frame gia thn epilogh twn font
         fontsFrame.setVisible(true);
-        fontsFrame.setSize(200,200);
-        
+        fontsFrame.setSize(200,200);       
     }//GEN-LAST:event_fontItemActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -528,18 +634,106 @@ public class textEditor extends javax.swing.JFrame {
         fontsFrame.setVisible(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void fontCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontCBActionPerformed
-      //loop ston pinaka me ta font Strings
-      //dhmiourgia pinaka Font
-       
-    }//GEN-LAST:event_fontCBActionPerformed
-
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
+        
+        //pairnoume thn timh tou style combobox
+        String styleItem=styleCB.getSelectedItem().toString();
+       
+        // pairnoume thn timh tou size combobox
+        int letterSize=Integer.parseInt(sizeCB.getSelectedItem().toString());
+        
+        /*loop ston pinaka me ta font Strings-->
+        gemisma tou pinaka font typou Font-->
+        me th vohtheia tou pinaka fonts typou String*/
+        for (int i=0;i<fonts.length;i++) {
+            switch (styleItem) {
+                //metatroph se bold
+                case "Bold":
+                    font[i]=new Font(fonts[i],Font.BOLD,letterSize);
+                    break;
+                //metatroph se italic
+                case "Italic":
+                    font[i]=new Font(fonts[i],Font.ITALIC,letterSize);
+                    break;
+                //metatroph se underlined
+                case "Underlined":
+                    font[i]=new Font(fonts[i],Font.PLAIN,letterSize);
+                    Map<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
+                    map.put(TextAttribute.FONT, font[i]);
+                    map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    font[i] = Font.getFont(map);
+                    jTextArea1.setFont(font[i]);
+                    break;
+                default:
+                    font[i]=new Font(fonts[i],Font.PLAIN,letterSize);
+                    break;
+            }
+        }
+        
+        /*pairnoume to index apo to stoixeio
+        pou exei epileksei o xrhsths sto combo
+        box me ta font*/
         int fontIdx =fontCB.getSelectedIndex();
+        
+        /*orizoume to font me to index pou dialekse
+        o xrhsths se sunduasmo me ton pinaka twn font
+        typou Font*/
         jTextArea1.setFont(font[fontIdx]);
+        
+        //kryvoume to frame
         fontsFrame.setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here        
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void FindKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindKeyActionPerformed
+        // TODO add your handling code here:
+        findTextFrame.setVisible(true);
+        findTextFrame.setSize(400,200);
+        
+    }//GEN-LAST:event_FindKeyActionPerformed
+
+    private void FindTextFrameCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindTextFrameCancelButtonActionPerformed
+        // TODO add your handling code here:
+        findTextFrame.setVisible(false);
+        
+    }//GEN-LAST:event_FindTextFrameCancelButtonActionPerformed
+
+    int currentPointer=0;
+    private void findTextFrameFindNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextFrameFindNextButtonActionPerformed
+        // TODO add your handling code here:       
+        String findFromText = jTextArea1.getText(); // bazoume se metaviliti to keimeno
+        String toFindText = jTextField1.getText(); // bazoume thn leksi poy psaxnoume      
+        int indexOf = findFromText.indexOf(toFindText,currentPointer);
+        int length = toFindText.length();
+        Highlighter h = jTextArea1.getHighlighter();
+        h.removeAllHighlights();
+        try{
+            h.addHighlight(indexOf, indexOf + length, new DefaultHighlighter.DefaultHighlightPainter(Color.yellow));
+        }
+        catch(BadLocationException ex){}
+        currentPointer = indexOf + length;
+        if(currentPointer >= findFromText.length()){
+            currentPointer = 0;
+        }
+        if(findFromText.indexOf(toFindText,currentPointer)== -1){
+            currentPointer=0;
+        }
+    }//GEN-LAST:event_findTextFrameFindNextButtonActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void replaceTextFrameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTextFrameButtonActionPerformed
+        String findFromText = jTextArea1.getText();
+        String toFindText = jTextField1.getText();
+        String withReplaceText =jTextField2.getText();
+        jTextArea1.setText(findFromText.replaceFirst(toFindText, withReplaceText));
+        currentPointer=0;
+    }//GEN-LAST:event_replaceTextFrameButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -576,12 +770,17 @@ public class textEditor extends javax.swing.JFrame {
             }
         });
     }
-    String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+    /* dhlwsh enos pinaka typou String
+    pou gemizei me ta onomata twn diathesimwn
+    font pou einai diathesima sthn Java*/
+    private String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem CopyRClick;
     private javax.swing.JMenuItem CutRClick;
     private javax.swing.JMenuItem DeleteRClick;
     private javax.swing.JDialog ErrorDialog1;
+    private javax.swing.JMenuItem FindKey;
+    private javax.swing.JButton FindTextFrameCancelButton;
     private javax.swing.JMenuItem PasteRClick;
     private javax.swing.JDialog PrintErrorDialog;
     private javax.swing.JPopupMenu RightClickPopUpMenu;
@@ -592,6 +791,8 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteKey;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JFrame findTextFrame;
+    private javax.swing.JButton findTextFrameFindNextButton;
     private javax.swing.JComboBox<String> fontCB;
     private javax.swing.JMenuItem fontItem;
     private javax.swing.JLabel fontLb;
@@ -600,17 +801,22 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton2;
     private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JButton okButton;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteKey;
     private javax.swing.JMenuItem printMenuItem;
+    private javax.swing.JButton replaceTextFrameButton;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JComboBox<String> sizeCB;
     private javax.swing.JLabel sizeLb;
