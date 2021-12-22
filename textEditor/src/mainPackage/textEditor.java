@@ -1,14 +1,13 @@
 
 package mainPackage;
 
-//<<<<<<< HEAD
-//=======
+
 
 import javax.swing.text.BadLocationException;
 import java.awt.Color;
 import java.awt.Component;
 
-//>>>>>>> find-replace-branch
+
 import javax.swing.event.UndoableEditListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -27,14 +26,13 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 
-//<<<<<<< HEAD
-//=======
+
 import javax.swing.PopupFactory;
 import javax.swing.WindowConstants;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
-//>>>>>>> find-replace-branch
+
 
 public class textEditor extends javax.swing.JFrame {
   UndoManager undoManager = new UndoManager();
