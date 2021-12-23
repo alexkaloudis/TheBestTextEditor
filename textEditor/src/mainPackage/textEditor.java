@@ -31,6 +31,9 @@ import javax.swing.PopupFactory;
 import javax.swing.WindowConstants;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 
 
@@ -46,10 +49,11 @@ public class textEditor extends javax.swing.JFrame {
         initComponents();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
         jFileChooser1.setFileFilter(filter);
+        textHere.setSize(800,1100);
         /*orismos ws arxikhs katastashs-->
         tou frame gia thn epilogh twn font*/
         fontsFrame.setVisible(false);
-        jTextArea1.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
+        textHere.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
         /*dhlwsh enos pinaka font-->
         me mhkos to mhkos tou pinaka-->
         me ta onomata twn font se morfh string*/
@@ -98,8 +102,9 @@ public class textEditor extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         replaceTextFrameButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        aboutFrame = new javax.swing.JFrame();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textHere = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -118,7 +123,13 @@ public class textEditor extends javax.swing.JFrame {
         formMenu = new javax.swing.JMenu();
         textPropertiesMenu = new javax.swing.JMenu();
         fontItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
+        colorMenuItem = new javax.swing.JMenuItem();
+        allignMenu = new javax.swing.JMenu();
+        leftItem = new javax.swing.JMenuItem();
+        centerItem = new javax.swing.JMenuItem();
+        rightItem = new javax.swing.JMenuItem();
+        justifiedItem = new javax.swing.JMenuItem();
+        aboutMenu = new javax.swing.JMenu();
 
         ErrorDialog1.setTitle("Error Message");
 
@@ -335,25 +346,34 @@ public class textEditor extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
+        javax.swing.GroupLayout aboutFrameLayout = new javax.swing.GroupLayout(aboutFrame.getContentPane());
+        aboutFrame.getContentPane().setLayout(aboutFrameLayout);
+        aboutFrameLayout.setHorizontalGroup(
+            aboutFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        aboutFrameLayout.setVerticalGroup(
+            aboutFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTextArea1MouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTextArea1MousePressed(evt);
-            }
+        textHere.setMargin(new java.awt.Insets(100, 100, 100, 100));
+        textHere.setMaximumSize(new java.awt.Dimension(800, 1100));
+        textHere.setMinimumSize(new java.awt.Dimension(200, 500));
+        textHere.setName(""); // NOI18N
+        textHere.setPreferredSize(new java.awt.Dimension(800, 1100));
+        textHere.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jTextArea1MouseReleased(evt);
+                textHereMouseReleased(evt);
             }
         });
-        jScrollPane1.setViewportView(jTextArea1);
+        jScrollPane2.setViewportView(textHere);
 
         fileMenu.setText("File");
 
+        newMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         newMenuItem.setText("New");
         fileMenu.add(newMenuItem);
 
@@ -466,12 +486,56 @@ public class textEditor extends javax.swing.JFrame {
         });
         textPropertiesMenu.add(fontItem);
 
+        colorMenuItem.setText("Color");
+        textPropertiesMenu.add(colorMenuItem);
+
         formMenu.add(textPropertiesMenu);
+
+        allignMenu.setText("Text alignment");
+
+        leftItem.setText("Left-aligned");
+        leftItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leftItemActionPerformed(evt);
+            }
+        });
+        allignMenu.add(leftItem);
+
+        centerItem.setText("Center-aligned");
+        centerItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                centerItemActionPerformed(evt);
+            }
+        });
+        allignMenu.add(centerItem);
+
+        rightItem.setText("Right-aligned");
+        rightItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rightItemActionPerformed(evt);
+            }
+        });
+        allignMenu.add(rightItem);
+
+        justifiedItem.setText("Justified");
+        justifiedItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                justifiedItemActionPerformed(evt);
+            }
+        });
+        allignMenu.add(justifiedItem);
+
+        formMenu.add(allignMenu);
 
         menuBar.add(formMenu);
 
-        helpMenu.setText("Help");
-        menuBar.add(helpMenu);
+        aboutMenu.setText("About");
+        aboutMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuActionPerformed(evt);
+            }
+        });
+        menuBar.add(aboutMenu);
 
         setJMenuBar(menuBar);
 
@@ -479,11 +543,13 @@ public class textEditor extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
         );
 
         pack();
@@ -498,7 +564,7 @@ public class textEditor extends javax.swing.JFrame {
             String fileName = jFileChooser1.getSelectedFile().getPath(); //tha apothikeusei sthn metavliti filename to arxeio me to path pou epileksame
                 try{
                     fs = new FileReader(fileName); 
-                    jTextArea1.read(fs,null); //nul??
+                    textHere.read(fs,null); //nul??
                     setTitle(fileName); //allazei titlo symfona me to arxeio.Deixnei to plires path kai onoma toy arxeiou 
                     fs.close();
                     
@@ -518,7 +584,7 @@ public class textEditor extends javax.swing.JFrame {
             File fileName = jFileChooser1.getSelectedFile();              
             try{
                     fw = new FileWriter(fileName);
-                    jTextArea1.write(fw); 
+                    textHere.write(fw); 
                     fw.close();
                 } catch(IOException exc){
                  //  ErrorDialog1.showMessageDialog(super.rootPane,"Save failed","",ErrorDialog1.ERROR_MESSAGE); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
@@ -529,7 +595,7 @@ public class textEditor extends javax.swing.JFrame {
     private void printMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printMenuItemActionPerformed
         //Print file
         try {
-                boolean complete = jTextArea1.print();
+                boolean complete = textHere.print();
             if (complete) {
                 /* show a success message  */
                 JOptionPane.showMessageDialog(super.rootPane, "The file was printed succefully",
@@ -548,22 +614,22 @@ public class textEditor extends javax.swing.JFrame {
 
     private void cutKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutKeyActionPerformed
         // TODO add your handling code here:
-        jTextArea1.cut();
+        textHere.cut();
     }//GEN-LAST:event_cutKeyActionPerformed
 
     private void copyKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyKeyActionPerformed
         // TODO add your handling code here:
-        jTextArea1.copy();
+        textHere.copy();
     }//GEN-LAST:event_copyKeyActionPerformed
 
     private void pasteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteKeyActionPerformed
         // TODO add your handling code here:
-        jTextArea1.paste();       
+        textHere.paste();       
     }//GEN-LAST:event_pasteKeyActionPerformed
 
     private void deleteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteKeyActionPerformed
         // TODO add your handling code here:
-        jTextArea1.setText(jTextArea1.getText().replace(jTextArea1.getSelectedText(),""));
+        textHere.setText(textHere.getText().replace(textHere.getSelectedText(),""));
     }//GEN-LAST:event_deleteKeyActionPerformed
 
     private void undoKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoKeyActionPerformed
@@ -580,22 +646,22 @@ public class textEditor extends javax.swing.JFrame {
 
     private void DeleteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.setText(jTextArea1.getText().replace(jTextArea1.getSelectedText(),""));
+        textHere.setText(textHere.getText().replace(textHere.getSelectedText(),""));
     }//GEN-LAST:event_DeleteRClickActionPerformed
 
     private void PasteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasteRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.paste();
+        textHere.paste();
     }//GEN-LAST:event_PasteRClickActionPerformed
 
     private void CopyRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CopyRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.copy();
+        textHere.copy();
     }//GEN-LAST:event_CopyRClickActionPerformed
 
     private void CutRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CutRClickActionPerformed
         // TODO add your handling code here:
-        jTextArea1.cut();
+        textHere.cut();
     }//GEN-LAST:event_CutRClickActionPerformed
 
     private void UndoRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoRClickActionPerformed
@@ -605,22 +671,6 @@ public class textEditor extends javax.swing.JFrame {
             undoManager.undo();
         }
     }//GEN-LAST:event_UndoRClickActionPerformed
-
-    private void jTextArea1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseReleased
-
-        if(evt.isPopupTrigger()){
-            RightClickPopUpMenu.show(this,evt.getX(),evt.getY());
-        }
-    }//GEN-LAST:event_jTextArea1MouseReleased
-
-    private void jTextArea1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MousePressed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jTextArea1MousePressed
-
-    private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextArea1MouseClicked
 
     private void fontItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontItemActionPerformed
         //otan o xrhsths kanei click sthn epilogh font tote anoigei to frame gia thn epilogh twn font
@@ -638,7 +688,6 @@ public class textEditor extends javax.swing.JFrame {
         
         //pairnoume thn timh tou style combobox
         String styleItem=styleCB.getSelectedItem().toString();
-       
         // pairnoume thn timh tou size combobox
         int letterSize=Integer.parseInt(sizeCB.getSelectedItem().toString());
         
@@ -662,7 +711,7 @@ public class textEditor extends javax.swing.JFrame {
                     map.put(TextAttribute.FONT, font[i]);
                     map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
                     font[i] = Font.getFont(map);
-                    jTextArea1.setFont(font[i]);
+                    textHere.setFont(font[i]);
                     break;
                 default:
                     font[i]=new Font(fonts[i],Font.PLAIN,letterSize);
@@ -678,7 +727,7 @@ public class textEditor extends javax.swing.JFrame {
         /*orizoume to font me to index pou dialekse
         o xrhsths se sunduasmo me ton pinaka twn font
         typou Font*/
-        jTextArea1.setFont(font[fontIdx]);
+        textHere.setFont(font[fontIdx]);
         
         //kryvoume to frame
         fontsFrame.setVisible(false);
@@ -704,11 +753,11 @@ public class textEditor extends javax.swing.JFrame {
     int currentPointer=0;
     private void findTextFrameFindNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextFrameFindNextButtonActionPerformed
         // TODO add your handling code here:       
-        String findFromText = jTextArea1.getText(); // bazoume se metaviliti to keimeno
+        String findFromText = textHere.getText(); // bazoume se metaviliti to keimeno
         String toFindText = jTextField1.getText(); // bazoume thn leksi poy psaxnoume      
         int indexOf = findFromText.indexOf(toFindText,currentPointer);
         int length = toFindText.length();
-        Highlighter h = jTextArea1.getHighlighter();
+        Highlighter h = textHere.getHighlighter();
         h.removeAllHighlights();
         try{
             h.addHighlight(indexOf, indexOf + length, new DefaultHighlighter.DefaultHighlightPainter(Color.yellow));
@@ -728,12 +777,60 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void replaceTextFrameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTextFrameButtonActionPerformed
-        String findFromText = jTextArea1.getText();
+        String findFromText = textHere.getText();
         String toFindText = jTextField1.getText();
         String withReplaceText =jTextField2.getText();
-        jTextArea1.setText(findFromText.replaceFirst(toFindText, withReplaceText));
+        textHere.setText(findFromText.replaceFirst(toFindText, withReplaceText));
         currentPointer=0;
     }//GEN-LAST:event_replaceTextFrameButtonActionPerformed
+
+    private void aboutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuActionPerformed
+        /*Otan o xrhsths kanei click sto item about apo thn mpara menu
+        tote ena frame emfanizetai mprosta sto kentriko frame to opoio anagrafei plhrofories gia tous
+        foithtes pou eftiaksan thn sugkekrimenh efarmogh*/
+        
+    }//GEN-LAST:event_aboutMenuActionPerformed
+
+    private void leftItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftItemActionPerformed
+        /*Otan o xrhsths epilegei apo to dropdownn menu
+        thn epilogh left align tote to keimeno stoixizetai pros ta aristera*/
+        StyledDocument style = textHere.getStyledDocument();
+        SimpleAttributeSet align= new SimpleAttributeSet();
+        StyleConstants.setAlignment(align, StyleConstants.ALIGN_LEFT);
+        style.setParagraphAttributes(0, style.getLength(), align, false);
+        
+    }//GEN-LAST:event_leftItemActionPerformed
+
+    private void textHereMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textHereMouseReleased
+        // TODO add your handling code here:
+        if(evt.isPopupTrigger()){
+            RightClickPopUpMenu.show(this,evt.getX(),evt.getY());
+        }
+    }//GEN-LAST:event_textHereMouseReleased
+
+    private void rightItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightItemActionPerformed
+        // TODO add your handling code here:
+        StyledDocument style = textHere.getStyledDocument();
+        SimpleAttributeSet align= new SimpleAttributeSet();
+        StyleConstants.setAlignment(align, StyleConstants.ALIGN_RIGHT);
+        style.setParagraphAttributes(0, style.getLength(), align, false);
+    }//GEN-LAST:event_rightItemActionPerformed
+
+    private void centerItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_centerItemActionPerformed
+        // TODO add your handling code here:
+        StyledDocument style = textHere.getStyledDocument();
+        SimpleAttributeSet align= new SimpleAttributeSet();
+        StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
+        style.setParagraphAttributes(0, style.getLength(), align, false);
+    }//GEN-LAST:event_centerItemActionPerformed
+
+    private void justifiedItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_justifiedItemActionPerformed
+        // TODO add your handling code here:
+        StyledDocument style = textHere.getStyledDocument();
+        SimpleAttributeSet align= new SimpleAttributeSet();
+        StyleConstants.setAlignment(align, StyleConstants.ALIGN_JUSTIFIED);
+        style.setParagraphAttributes(0, style.getLength(), align, false);
+    }//GEN-LAST:event_justifiedItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -785,7 +882,12 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JDialog PrintErrorDialog;
     private javax.swing.JPopupMenu RightClickPopUpMenu;
     private javax.swing.JMenuItem UndoRClick;
+    private javax.swing.JFrame aboutFrame;
+    private javax.swing.JMenu aboutMenu;
+    private javax.swing.JMenu allignMenu;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JMenuItem centerItem;
+    private javax.swing.JMenuItem colorMenuItem;
     private javax.swing.JMenuItem copyKey;
     private javax.swing.JMenuItem cutKey;
     private javax.swing.JMenuItem deleteKey;
@@ -798,18 +900,18 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JLabel fontLb;
     private javax.swing.JFrame fontsFrame;
     private javax.swing.JMenu formMenu;
-    private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JMenuItem justifiedItem;
+    private javax.swing.JMenuItem leftItem;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JButton okButton;
@@ -817,11 +919,13 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JMenuItem pasteKey;
     private javax.swing.JMenuItem printMenuItem;
     private javax.swing.JButton replaceTextFrameButton;
+    private javax.swing.JMenuItem rightItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JComboBox<String> sizeCB;
     private javax.swing.JLabel sizeLb;
     private javax.swing.JComboBox<String> styleCB;
     private javax.swing.JLabel styleLb;
+    private javax.swing.JTextPane textHere;
     private javax.swing.JMenu textPropertiesMenu;
     private javax.swing.JMenuItem undoKey;
     // End of variables declaration//GEN-END:variables
