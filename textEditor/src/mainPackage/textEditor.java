@@ -3,11 +3,12 @@ package mainPackage;
 
 
 
+import java.awt.BorderLayout;
 import javax.swing.text.BadLocationException;
 import java.awt.Color;
 import java.awt.Component;
-
-
+import java.awt.ComponentOrientation;
+import java.awt.Container;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -20,17 +21,22 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
 import javax.swing.JOptionPane;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
-
-
-import javax.swing.PopupFactory;
-import javax.swing.WindowConstants;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Keymap;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -58,6 +64,8 @@ public class textEditor extends javax.swing.JFrame {
         me mhkos to mhkos tou pinaka-->
         me ta onomata twn font se morfh string*/
         font=new Font[fonts.length];
+        
+        textWrapRadio.setSelected(false);
         
     }
          
@@ -103,7 +111,7 @@ public class textEditor extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         replaceTextFrameButton = new javax.swing.JButton();
         aboutFrame = new javax.swing.JFrame();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        scroll = new javax.swing.JScrollPane();
         textHere = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -124,6 +132,7 @@ public class textEditor extends javax.swing.JFrame {
         textPropertiesMenu = new javax.swing.JMenu();
         fontItem = new javax.swing.JMenuItem();
         colorMenuItem = new javax.swing.JMenuItem();
+        textWrapRadio = new javax.swing.JRadioButtonMenuItem();
         allignMenu = new javax.swing.JMenu();
         leftItem = new javax.swing.JMenuItem();
         centerItem = new javax.swing.JMenuItem();
@@ -359,17 +368,20 @@ public class textEditor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        textHere.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         textHere.setMargin(new java.awt.Insets(100, 100, 100, 100));
         textHere.setMaximumSize(new java.awt.Dimension(800, 1100));
         textHere.setMinimumSize(new java.awt.Dimension(200, 500));
         textHere.setName(""); // NOI18N
-        textHere.setPreferredSize(new java.awt.Dimension(800, 1100));
+        textHere.setPreferredSize(new java.awt.Dimension(10, 1100));
         textHere.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 textHereMouseReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(textHere);
+        scroll.setViewportView(textHere);
 
         fileMenu.setText("File");
 
@@ -489,6 +501,15 @@ public class textEditor extends javax.swing.JFrame {
         colorMenuItem.setText("Color");
         textPropertiesMenu.add(colorMenuItem);
 
+        textWrapRadio.setSelected(true);
+        textWrapRadio.setText("Text wrap");
+        textWrapRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textWrapRadioActionPerformed(evt);
+            }
+        });
+        textPropertiesMenu.add(textWrapRadio);
+
         formMenu.add(textPropertiesMenu);
 
         allignMenu.setText("Text alignment");
@@ -543,13 +564,13 @@ public class textEditor extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(scroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
+                .addComponent(scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
         );
 
         pack();
@@ -596,17 +617,17 @@ public class textEditor extends javax.swing.JFrame {
         //Print file
         try {
                 boolean complete = textHere.print();
-            if (complete) {
+                if (complete) {
                 /* show a success message  */
                 JOptionPane.showMessageDialog(super.rootPane, "The file was printed succefully",
-               "textEditor", JOptionPane.PLAIN_MESSAGE);
+                "textEditor", JOptionPane.PLAIN_MESSAGE);
             } else {
-            /*show a message indicating that printing was cancelled */
+                /*show a message indicating that printing was cancelled */
                 JOptionPane.showMessageDialog(super.rootPane, "Printing was canceled!",
                "textEditor", JOptionPane.ERROR_MESSAGE);
             }
         } catch (PrinterException pe) {
-        /* Printing failed, report to the user */
+            /* Printing failed, report to the user */
             JOptionPane.showMessageDialog(super.rootPane, "Printing failed!!!",
             "textEditor", JOptionPane.ERROR_MESSAGE);
         }
@@ -809,7 +830,8 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_textHereMouseReleased
 
     private void rightItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightItemActionPerformed
-        // TODO add your handling code here:
+         /*Otan o xrhsths epilegei apo to dropdownn menu
+        thn epilogh left align tote to keimeno stoixizetai pros ta deksia*/
         StyledDocument style = textHere.getStyledDocument();
         SimpleAttributeSet align= new SimpleAttributeSet();
         StyleConstants.setAlignment(align, StyleConstants.ALIGN_RIGHT);
@@ -817,7 +839,8 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_rightItemActionPerformed
 
     private void centerItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_centerItemActionPerformed
-        // TODO add your handling code here:
+         /*Otan o xrhsths epilegei apo to dropdownn menu
+        thn epilogh left align tote to keimeno stoixizetai sto kentro*/
         StyledDocument style = textHere.getStyledDocument();
         SimpleAttributeSet align= new SimpleAttributeSet();
         StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
@@ -825,12 +848,19 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_centerItemActionPerformed
 
     private void justifiedItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_justifiedItemActionPerformed
-        // TODO add your handling code here:
+         /*Otan o xrhsths epilegei apo to dropdownn menu
+        thn epilogh left align tote to keimeno stoixizetai plhrws*/
         StyledDocument style = textHere.getStyledDocument();
         SimpleAttributeSet align= new SimpleAttributeSet();
         StyleConstants.setAlignment(align, StyleConstants.ALIGN_JUSTIFIED);
         style.setParagraphAttributes(0, style.getLength(), align, false);
     }//GEN-LAST:event_justifiedItemActionPerformed
+
+    private void textWrapRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textWrapRadioActionPerformed
+       /*otan o xrhsths pataei auto to radio button
+        tote energopoieitai h anadiplwsh keimenou*/
+        textHere.setEditorKit(new WrapEditorKit());
+    }//GEN-LAST:event_textWrapRadioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -904,7 +934,6 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -921,12 +950,14 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JButton replaceTextFrameButton;
     private javax.swing.JMenuItem rightItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JScrollPane scroll;
     private javax.swing.JComboBox<String> sizeCB;
     private javax.swing.JLabel sizeLb;
     private javax.swing.JComboBox<String> styleCB;
     private javax.swing.JLabel styleLb;
     private javax.swing.JTextPane textHere;
     private javax.swing.JMenu textPropertiesMenu;
+    private javax.swing.JRadioButtonMenuItem textWrapRadio;
     private javax.swing.JMenuItem undoKey;
     // End of variables declaration//GEN-END:variables
 }
