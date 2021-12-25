@@ -64,6 +64,7 @@ public class textEditor extends javax.swing.JFrame {
         me mhkos to mhkos tou pinaka-->
         me ta onomata twn font se morfh string*/
         font=new Font[fonts.length];
+            
         
         textWrapRadio.setSelected(false);
         
@@ -369,13 +370,15 @@ public class textEditor extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setPreferredSize(new java.awt.Dimension(800, 1000));
 
+        textHere.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 0, 0), new java.awt.Color(102, 102, 102)));
         textHere.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         textHere.setMargin(new java.awt.Insets(100, 100, 100, 100));
         textHere.setMaximumSize(new java.awt.Dimension(800, 1100));
         textHere.setMinimumSize(new java.awt.Dimension(200, 500));
         textHere.setName(""); // NOI18N
-        textHere.setPreferredSize(new java.awt.Dimension(10, 1100));
+        textHere.setPreferredSize(new java.awt.Dimension(800, 1000));
         textHere.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 textHereMouseReleased(evt);
@@ -564,13 +567,11 @@ public class textEditor extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
+            .addComponent(scroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
         );
 
         pack();
@@ -859,7 +860,10 @@ public class textEditor extends javax.swing.JFrame {
     private void textWrapRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textWrapRadioActionPerformed
        /*otan o xrhsths pataei auto to radio button
         tote energopoieitai h anadiplwsh keimenou*/
-        textHere.setEditorKit(new WrapEditorKit());
+       
+        String txt=textHere.getText();// kratame to keimeno gia na mhn diagrafei
+        textHere.setEditorKit(new WrapEditorKit());//energopoieitai h anadiplwsh sto keimeno
+        textHere.setText(txt);//efarmzetai sto keimeno pou exoume krathsei
     }//GEN-LAST:event_textWrapRadioActionPerformed
 
     /**
