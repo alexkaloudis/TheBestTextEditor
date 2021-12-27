@@ -3,12 +3,9 @@ package mainPackage;
 
 
 
-import java.awt.BorderLayout;
 import javax.swing.text.BadLocationException;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -21,22 +18,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File; 
 import javax.swing.JOptionPane;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
-import javax.swing.text.Keymap;
+import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -60,14 +51,29 @@ public class textEditor extends javax.swing.JFrame {
         tou frame gia thn epilogh twn font*/
         fontsFrame.setVisible(false);
         textHere.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
-        /*dhlwsh enos pinaka font-->
-        me mhkos to mhkos tou pinaka-->
-        me ta onomata twn font se morfh string*/
         font=new Font[fonts.length];
-            
-        
-        textWrapRadio.setSelected(false);
-        
+        textHere.setEditorKit(new WrapEditorKit());
+        aboutFrame.setVisible(false);
+        aboutLabel.setText(   "<html> Το συγκεκριμένο text editor αποτελεί"
+                            + "<br>ένα εργαλείο για απλή καθημερινή χρήση."
+                            + "<br>"
+                            + "<br>Η εφαρμογή δημιουργήθηκε με αφορμή"
+                            + "<br>την ανάθεση εργασίας στους φοιτητές"
+                            + "<br> Καλούδη Αλέξανδρο και Αποστολίδη Μιχαήλ."
+                            + "<br>"
+                            + "<br>Σκοπός της εργασίας είναι η πρακτική ενασχόληση"
+                            + "<br>με το αντικείμενο του μαθήματος Αλληλεπίδραση"
+                            + "<br>Ανθρώπου Μηχανής."
+                            + "<br>"
+                            + "<br>Το μάθημα διδάσκεται από τον καθηγητή Κεραμόπουλο Ευκλείδη.");
+        contactLabel.setText( "<html>Παρακάτω αναγράφονται στοιχεία επικοινωνίας των φοιτητών που συμμετείχαν στην εργασία:"
+                            + "<br>"
+                            + "<br>Αποστολίδης Μιχαήλ:"
+                            + "<br>it175108@it.teithe.gr"
+                            + "<br>"
+                            + "<br>Καλούδης Αλέξανδρος"
+                            + "<br>it185186@it.teithe.gr");
+
     }
          
   
@@ -93,7 +99,6 @@ public class textEditor extends javax.swing.JFrame {
         CopyRClick = new javax.swing.JMenuItem();
         PasteRClick = new javax.swing.JMenuItem();
         DeleteRClick = new javax.swing.JMenuItem();
-        jButton2 = new javax.swing.JButton();
         fontsFrame = new javax.swing.JFrame();
         fontLb = new javax.swing.JLabel();
         styleLb = new javax.swing.JLabel();
@@ -112,6 +117,10 @@ public class textEditor extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         replaceTextFrameButton = new javax.swing.JButton();
         aboutFrame = new javax.swing.JFrame();
+        aboutLabel = new javax.swing.JLabel("Center", SwingConstants.CENTER);
+        pickColor = new javax.swing.JColorChooser();
+        contactFrame = new javax.swing.JFrame();
+        contactLabel = new javax.swing.JLabel();
         scroll = new javax.swing.JScrollPane();
         textHere = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
@@ -132,14 +141,15 @@ public class textEditor extends javax.swing.JFrame {
         formMenu = new javax.swing.JMenu();
         textPropertiesMenu = new javax.swing.JMenu();
         fontItem = new javax.swing.JMenuItem();
-        colorMenuItem = new javax.swing.JMenuItem();
-        textWrapRadio = new javax.swing.JRadioButtonMenuItem();
+        colorPicker = new javax.swing.JMenuItem();
         allignMenu = new javax.swing.JMenu();
         leftItem = new javax.swing.JMenuItem();
         centerItem = new javax.swing.JMenuItem();
         rightItem = new javax.swing.JMenuItem();
         justifiedItem = new javax.swing.JMenuItem();
         aboutMenu = new javax.swing.JMenu();
+        aboutInfo = new javax.swing.JMenuItem();
+        contactItem = new javax.swing.JMenuItem();
 
         ErrorDialog1.setTitle("Error Message");
 
@@ -205,8 +215,6 @@ public class textEditor extends javax.swing.JFrame {
             }
         });
         RightClickPopUpMenu.add(DeleteRClick);
-
-        jButton2.setText("jButton2");
 
         fontsFrame.setMinimumSize(new java.awt.Dimension(400, 300));
         fontsFrame.setSize(new java.awt.Dimension(500, 450));
@@ -356,15 +364,42 @@ public class textEditor extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
+        aboutFrame.setSize(new java.awt.Dimension(500, 400));
+
         javax.swing.GroupLayout aboutFrameLayout = new javax.swing.GroupLayout(aboutFrame.getContentPane());
         aboutFrame.getContentPane().setLayout(aboutFrameLayout);
         aboutFrameLayout.setHorizontalGroup(
             aboutFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(aboutFrameLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(aboutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(128, Short.MAX_VALUE))
         );
         aboutFrameLayout.setVerticalGroup(
             aboutFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(aboutFrameLayout.createSequentialGroup()
+                .addComponent(aboutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 162, Short.MAX_VALUE))
+        );
+
+        contactFrame.setForeground(java.awt.Color.black);
+        contactFrame.setSize(new java.awt.Dimension(500, 400));
+
+        javax.swing.GroupLayout contactFrameLayout = new javax.swing.GroupLayout(contactFrame.getContentPane());
+        contactFrame.getContentPane().setLayout(contactFrameLayout);
+        contactFrameLayout.setHorizontalGroup(
+            contactFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contactFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(contactLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(113, Short.MAX_VALUE))
+        );
+        contactFrameLayout.setVerticalGroup(
+            contactFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contactFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(contactLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -390,6 +425,11 @@ public class textEditor extends javax.swing.JFrame {
 
         newMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         newMenuItem.setText("New");
+        newMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(newMenuItem);
 
         openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -426,14 +466,10 @@ public class textEditor extends javax.swing.JFrame {
         menuBar.add(fileMenu);
 
         editMenu.setText("Edit");
-        editMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editMenuActionPerformed(evt);
-            }
-        });
 
         undoKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         undoKey.setText("Undo");
+        undoKey.setEnabled(false);
         undoKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 undoKeyActionPerformed(evt);
@@ -444,6 +480,7 @@ public class textEditor extends javax.swing.JFrame {
 
         cutKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         cutKey.setText("Cut");
+        cutKey.setEnabled(false);
         cutKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cutKeyActionPerformed(evt);
@@ -453,6 +490,7 @@ public class textEditor extends javax.swing.JFrame {
 
         copyKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         copyKey.setText("Copy");
+        copyKey.setEnabled(false);
         copyKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 copyKeyActionPerformed(evt);
@@ -471,6 +509,7 @@ public class textEditor extends javax.swing.JFrame {
 
         deleteKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         deleteKey.setText("Delete");
+        deleteKey.setEnabled(false);
         deleteKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteKeyActionPerformed(evt);
@@ -480,6 +519,7 @@ public class textEditor extends javax.swing.JFrame {
 
         FindKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         FindKey.setText("Find...");
+        FindKey.setEnabled(false);
         FindKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FindKeyActionPerformed(evt);
@@ -501,17 +541,13 @@ public class textEditor extends javax.swing.JFrame {
         });
         textPropertiesMenu.add(fontItem);
 
-        colorMenuItem.setText("Color");
-        textPropertiesMenu.add(colorMenuItem);
-
-        textWrapRadio.setSelected(true);
-        textWrapRadio.setText("Text wrap");
-        textWrapRadio.addActionListener(new java.awt.event.ActionListener() {
+        colorPicker.setText("Color");
+        colorPicker.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textWrapRadioActionPerformed(evt);
+                colorPickerActionPerformed(evt);
             }
         });
-        textPropertiesMenu.add(textWrapRadio);
+        textPropertiesMenu.add(colorPicker);
 
         formMenu.add(textPropertiesMenu);
 
@@ -554,11 +590,23 @@ public class textEditor extends javax.swing.JFrame {
         menuBar.add(formMenu);
 
         aboutMenu.setText("About");
-        aboutMenu.addActionListener(new java.awt.event.ActionListener() {
+
+        aboutInfo.setText("Info");
+        aboutInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aboutMenuActionPerformed(evt);
+                aboutInfoActionPerformed(evt);
             }
         });
+        aboutMenu.add(aboutInfo);
+
+        contactItem.setText("Contact");
+        contactItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contactItemActionPerformed(evt);
+            }
+        });
+        aboutMenu.add(contactItem);
+
         menuBar.add(aboutMenu);
 
         setJMenuBar(menuBar);
@@ -605,12 +653,13 @@ public class textEditor extends javax.swing.JFrame {
         if(saveFile == JFileChooser.APPROVE_OPTION){
             File fileName = jFileChooser1.getSelectedFile();              
             try{
-                    fw = new FileWriter(fileName);
-                    textHere.write(fw); 
-                    fw.close();
-                } catch(IOException exc){
-                 //  ErrorDialog1.showMessageDialog(super.rootPane,"Save failed","",ErrorDialog1.ERROR_MESSAGE); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
-                }
+                fw = new FileWriter(fileName);
+                textHere.write(fw); 
+                fw.close();
+            }catch(IOException exc){
+                JOptionPane.showMessageDialog(super.rootPane, "exception was thrown",
+                "textEditor", JOptionPane.ERROR_MESSAGE);//pop up parathiro me exception alla den mporw na vrw pws leitourgei
+            }
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
@@ -635,54 +684,63 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_printMenuItemActionPerformed
 
     private void cutKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutKeyActionPerformed
-        // TODO add your handling code here:
+        //cut
+        if(textHere.getSelectedText()!=null)
+            cutKey.setEnabled(true);
         textHere.cut();
     }//GEN-LAST:event_cutKeyActionPerformed
 
     private void copyKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyKeyActionPerformed
-        // TODO add your handling code here:
+        //copy
+        if(textHere.getSelectedText()!=null)
+            deleteKey.setEnabled(true);
         textHere.copy();
     }//GEN-LAST:event_copyKeyActionPerformed
 
     private void pasteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteKeyActionPerformed
-        // TODO add your handling code here:
+        //paste (na kanei paste ekei pou einai o kersoras)
         textHere.paste();       
     }//GEN-LAST:event_pasteKeyActionPerformed
 
     private void deleteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteKeyActionPerformed
-        // TODO add your handling code here:
+        //delete
+        if(textHere.getSelectedText()!=null)
+            copyKey.setEnabled(true);
         textHere.setText(textHere.getText().replace(textHere.getSelectedText(),""));
     }//GEN-LAST:event_deleteKeyActionPerformed
 
     private void undoKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoKeyActionPerformed
-        // TODO add your handling code here:
+        //undo
         if (undoManager.canUndo()) {
           undoManager.undo();
         }
 
     }//GEN-LAST:event_undoKeyActionPerformed
 
-    private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_editMenuActionPerformed
-
     private void DeleteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteRClickActionPerformed
-        // TODO add your handling code here:
+        //delete on right click
+        if(textHere.getSelectedText()!=null)
+            DeleteRClick.setEnabled(true);
         textHere.setText(textHere.getText().replace(textHere.getSelectedText(),""));
     }//GEN-LAST:event_DeleteRClickActionPerformed
 
     private void PasteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasteRClickActionPerformed
-        // TODO add your handling code here:
+        /*diorthwse to wste na kanei paste ekei pou einai o kersoras*/
+        //paste
         textHere.paste();
     }//GEN-LAST:event_PasteRClickActionPerformed
 
     private void CopyRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CopyRClickActionPerformed
-        // TODO add your handling code here:
+        //copy
+        if(textHere.getSelectedText()!=null)
+            CopyRClick.setEnabled(true);
         textHere.copy();
     }//GEN-LAST:event_CopyRClickActionPerformed
 
     private void CutRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CutRClickActionPerformed
-        // TODO add your handling code here:
+        //cut
+        if(textHere.getSelectedText()!=null)
+            CutRClick.setEnabled(true);
         textHere.cut();
     }//GEN-LAST:event_CutRClickActionPerformed
 
@@ -707,7 +765,7 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        
+ 
         //pairnoume thn timh tou style combobox
         String styleItem=styleCB.getSelectedItem().toString();
         // pairnoume thn timh tou size combobox
@@ -741,14 +799,8 @@ public class textEditor extends javax.swing.JFrame {
             }
         }
         
-        /*pairnoume to index apo to stoixeio
-        pou exei epileksei o xrhsths sto combo
-        box me ta font*/
         int fontIdx =fontCB.getSelectedIndex();
         
-        /*orizoume to font me to index pou dialekse
-        o xrhsths se sunduasmo me ton pinaka twn font
-        typou Font*/
         textHere.setFont(font[fontIdx]);
         
         //kryvoume to frame
@@ -769,6 +821,7 @@ public class textEditor extends javax.swing.JFrame {
     private void FindTextFrameCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindTextFrameCancelButtonActionPerformed
         // TODO add your handling code here:
         findTextFrame.setVisible(false);
+        
         
     }//GEN-LAST:event_FindTextFrameCancelButtonActionPerformed
 
@@ -806,13 +859,6 @@ public class textEditor extends javax.swing.JFrame {
         currentPointer=0;
     }//GEN-LAST:event_replaceTextFrameButtonActionPerformed
 
-    private void aboutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuActionPerformed
-        /*Otan o xrhsths kanei click sto item about apo thn mpara menu
-        tote ena frame emfanizetai mprosta sto kentriko frame to opoio anagrafei plhrofories gia tous
-        foithtes pou eftiaksan thn sugkekrimenh efarmogh*/
-        
-    }//GEN-LAST:event_aboutMenuActionPerformed
-
     private void leftItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftItemActionPerformed
         /*Otan o xrhsths epilegei apo to dropdownn menu
         thn epilogh left align tote to keimeno stoixizetai pros ta aristera*/
@@ -820,6 +866,9 @@ public class textEditor extends javax.swing.JFrame {
         SimpleAttributeSet align= new SimpleAttributeSet();
         StyleConstants.setAlignment(align, StyleConstants.ALIGN_LEFT);
         style.setParagraphAttributes(0, style.getLength(), align, false);
+        MutableAttributeSet s = new SimpleAttributeSet();
+        StyleConstants.setForeground(s, Color.red);
+        
         
     }//GEN-LAST:event_leftItemActionPerformed
 
@@ -857,14 +906,35 @@ public class textEditor extends javax.swing.JFrame {
         style.setParagraphAttributes(0, style.getLength(), align, false);
     }//GEN-LAST:event_justifiedItemActionPerformed
 
-    private void textWrapRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textWrapRadioActionPerformed
-       /*otan o xrhsths pataei auto to radio button
-        tote energopoieitai h anadiplwsh keimenou*/
-       
-        String txt=textHere.getText();// kratame to keimeno gia na mhn diagrafei
-        textHere.setEditorKit(new WrapEditorKit());//energopoieitai h anadiplwsh sto keimeno
-        textHere.setText(txt);//efarmzetai sto keimeno pou exoume krathsei
-    }//GEN-LAST:event_textWrapRadioActionPerformed
+    private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
+        FileWriter fw;
+        int newFile = jFileChooser1.showSaveDialog(this);
+        if(newFile == JFileChooser.APPROVE_OPTION){
+            File fileName = jFileChooser1.getSelectedFile();              
+            try{
+                fw = new FileWriter(fileName);
+                textHere.write(fw); 
+                fw.close();
+            }catch(IOException exc){
+                JOptionPane.showMessageDialog(super.rootPane, "exception was thrown",
+                "textEditor", JOptionPane.ERROR_MESSAGE);//pop up parathiro me exception alla den mporw na vrw pws leitourgei
+            }
+        }
+    }//GEN-LAST:event_newMenuItemActionPerformed
+
+    private void colorPickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorPickerActionPerformed
+        
+        Color newColor=pickColor.showDialog(this,"Choose Text Color",Color.black);
+        textHere.setForeground(newColor);
+    }//GEN-LAST:event_colorPickerActionPerformed
+
+    private void aboutInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutInfoActionPerformed
+        aboutFrame.setVisible(true);
+    }//GEN-LAST:event_aboutInfoActionPerformed
+
+    private void contactItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contactItemActionPerformed
+        contactFrame.setVisible(true);
+    }//GEN-LAST:event_contactItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -895,6 +965,7 @@ public class textEditor extends javax.swing.JFrame {
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new textEditor().setVisible(true);
 
@@ -917,11 +988,16 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JPopupMenu RightClickPopUpMenu;
     private javax.swing.JMenuItem UndoRClick;
     private javax.swing.JFrame aboutFrame;
+    private javax.swing.JMenuItem aboutInfo;
+    private javax.swing.JLabel aboutLabel;
     private javax.swing.JMenu aboutMenu;
     private javax.swing.JMenu allignMenu;
     private javax.swing.JButton cancelButton;
     private javax.swing.JMenuItem centerItem;
-    private javax.swing.JMenuItem colorMenuItem;
+    private javax.swing.JMenuItem colorPicker;
+    private javax.swing.JFrame contactFrame;
+    private javax.swing.JMenuItem contactItem;
+    private javax.swing.JLabel contactLabel;
     private javax.swing.JMenuItem copyKey;
     private javax.swing.JMenuItem cutKey;
     private javax.swing.JMenuItem deleteKey;
@@ -934,7 +1010,6 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JLabel fontLb;
     private javax.swing.JFrame fontsFrame;
     private javax.swing.JMenu formMenu;
-    private javax.swing.JButton jButton2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -950,6 +1025,7 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JButton okButton;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteKey;
+    private javax.swing.JColorChooser pickColor;
     private javax.swing.JMenuItem printMenuItem;
     private javax.swing.JButton replaceTextFrameButton;
     private javax.swing.JMenuItem rightItem;
@@ -961,7 +1037,6 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JLabel styleLb;
     private javax.swing.JTextPane textHere;
     private javax.swing.JMenu textPropertiesMenu;
-    private javax.swing.JRadioButtonMenuItem textWrapRadio;
     private javax.swing.JMenuItem undoKey;
     // End of variables declaration//GEN-END:variables
 }
