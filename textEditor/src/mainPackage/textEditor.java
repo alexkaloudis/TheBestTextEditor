@@ -73,6 +73,7 @@ public class textEditor extends javax.swing.JFrame {
                             + "<br>"
                             + "<br>Καλούδης Αλέξανδρος"
                             + "<br>it185186@it.teithe.gr");
+        
 
     }
          
@@ -407,8 +408,6 @@ public class textEditor extends javax.swing.JFrame {
                 .addContainerGap(76, Short.MAX_VALUE))
         );
 
-        ChooseSaveOrNotDialog.setPreferredSize(new java.awt.Dimension(600, 400));
-
         jLabel3.setText("Do you want to save any changes?");
 
         YesButton.setText("Yes");
@@ -476,6 +475,11 @@ public class textEditor extends javax.swing.JFrame {
         textHere.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 textHereMouseReleased(evt);
+            }
+        });
+        textHere.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                textHereKeyTyped(evt);
             }
         });
         scroll.setViewportView(textHere);
@@ -1001,6 +1005,23 @@ public class textEditor extends javax.swing.JFrame {
         textHere.setText(null);
         ChooseSaveOrNotDialog.dispose();
     }//GEN-LAST:event_NoButtonActionPerformed
+
+    private void textHereKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textHereKeyTyped
+        
+        if(!textHere.getText().equals("")){
+            undoKey.setEnabled(true);
+            cutKey.setEnabled(true);
+            copyKey.setEnabled(true);
+            deleteKey.setEnabled(true);
+            FindKey.setEnabled(true);
+        }else{
+            undoKey.setEnabled(false);
+            cutKey.setEnabled(false);
+            copyKey.setEnabled(false);
+            deleteKey.setEnabled(false);
+            FindKey.setEnabled(false);
+        }
+    }//GEN-LAST:event_textHereKeyTyped
 
     /**
      * @param args the command line arguments

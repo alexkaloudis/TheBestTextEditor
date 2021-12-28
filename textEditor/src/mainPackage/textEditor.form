@@ -381,11 +381,6 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JDialog" name="ChooseSaveOrNotDialog">
-      <Properties>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[600, 400]"/>
-        </Property>
-      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -766,6 +761,7 @@
           </Properties>
           <Events>
             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="textHereMouseReleased"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textHereKeyTyped"/>
           </Events>
         </Component>
       </SubComponents>
