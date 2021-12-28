@@ -5,9 +5,9 @@ package mainPackage;
 
 import javax.swing.text.BadLocationException;
 import java.awt.Color;
-import java.awt.Component;
-import javax.swing.event.UndoableEditListener;
-import javax.swing.event.UndoableEditEvent;
+//import java.awt.Component;
+//import javax.swing.event.UndoableEditListener;
+//import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import java.awt.print.PrinterException;
 import java.io.FileReader; //eisagwgh aparatetiton vivliothikon
@@ -121,6 +121,11 @@ public class textEditor extends javax.swing.JFrame {
         pickColor = new javax.swing.JColorChooser();
         contactFrame = new javax.swing.JFrame();
         contactLabel = new javax.swing.JLabel();
+        ChooseSaveOrNotDialog = new javax.swing.JDialog();
+        jLabel3 = new javax.swing.JLabel();
+        YesButton = new javax.swing.JButton();
+        NoButton = new javax.swing.JButton();
+        CancelButton = new javax.swing.JButton();
         scroll = new javax.swing.JScrollPane();
         textHere = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
@@ -400,6 +405,60 @@ public class textEditor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(contactLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(76, Short.MAX_VALUE))
+        );
+
+        ChooseSaveOrNotDialog.setPreferredSize(new java.awt.Dimension(600, 400));
+
+        jLabel3.setText("Do you want to save any changes?");
+
+        YesButton.setText("Yes");
+        YesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                YesButtonActionPerformed(evt);
+            }
+        });
+
+        NoButton.setText("No");
+        NoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NoButtonActionPerformed(evt);
+            }
+        });
+
+        CancelButton.setText("cancel");
+        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ChooseSaveOrNotDialogLayout = new javax.swing.GroupLayout(ChooseSaveOrNotDialog.getContentPane());
+        ChooseSaveOrNotDialog.getContentPane().setLayout(ChooseSaveOrNotDialogLayout);
+        ChooseSaveOrNotDialogLayout.setHorizontalGroup(
+            ChooseSaveOrNotDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ChooseSaveOrNotDialogLayout.createSequentialGroup()
+                .addGap(109, 109, 109)
+                .addGroup(ChooseSaveOrNotDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ChooseSaveOrNotDialogLayout.createSequentialGroup()
+                        .addComponent(YesButton)
+                        .addGap(33, 33, 33)
+                        .addComponent(NoButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(CancelButton))
+                    .addComponent(jLabel3))
+                .addContainerGap(83, Short.MAX_VALUE))
+        );
+        ChooseSaveOrNotDialogLayout.setVerticalGroup(
+            ChooseSaveOrNotDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ChooseSaveOrNotDialogLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jLabel3)
+                .addGap(29, 29, 29)
+                .addGroup(ChooseSaveOrNotDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(YesButton)
+                    .addComponent(NoButton)
+                    .addComponent(CancelButton))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -907,19 +966,8 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_justifiedItemActionPerformed
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-        FileWriter fw;
-        int newFile = jFileChooser1.showSaveDialog(this);
-        if(newFile == JFileChooser.APPROVE_OPTION){
-            File fileName = jFileChooser1.getSelectedFile();              
-            try{
-                fw = new FileWriter(fileName);
-                textHere.write(fw); 
-                fw.close();
-            }catch(IOException exc){
-                JOptionPane.showMessageDialog(super.rootPane, "exception was thrown",
-                "textEditor", JOptionPane.ERROR_MESSAGE);//pop up parathiro me exception alla den mporw na vrw pws leitourgei
-            }
-        }
+        ChooseSaveOrNotDialog.setVisible(true);
+        ChooseSaveOrNotDialog.setSize(400,200);
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void colorPickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorPickerActionPerformed
@@ -935,6 +983,24 @@ public class textEditor extends javax.swing.JFrame {
     private void contactItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contactItemActionPerformed
         contactFrame.setVisible(true);
     }//GEN-LAST:event_contactItemActionPerformed
+
+    private void YesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButtonActionPerformed
+        // TODO add your handling code here:
+        saveMenuItemActionPerformed(evt); // kalei thn save method gia na swseis to arxeio
+        ChooseSaveOrNotDialog.dispose();
+        //ChooseSaveOrNotDialog.setVisible(false);
+    }//GEN-LAST:event_YesButtonActionPerformed
+
+    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        // TODO add your handling code here:
+        ChooseSaveOrNotDialog.dispose();
+    }//GEN-LAST:event_CancelButtonActionPerformed
+
+    private void NoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoButtonActionPerformed
+        // TODO add your handling code here:
+        textHere.setText(null);
+        ChooseSaveOrNotDialog.dispose();
+    }//GEN-LAST:event_NoButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -977,16 +1043,20 @@ public class textEditor extends javax.swing.JFrame {
     font pou einai diathesima sthn Java*/
     private String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton CancelButton;
+    private javax.swing.JDialog ChooseSaveOrNotDialog;
     private javax.swing.JMenuItem CopyRClick;
     private javax.swing.JMenuItem CutRClick;
     private javax.swing.JMenuItem DeleteRClick;
     private javax.swing.JDialog ErrorDialog1;
     private javax.swing.JMenuItem FindKey;
     private javax.swing.JButton FindTextFrameCancelButton;
+    private javax.swing.JButton NoButton;
     private javax.swing.JMenuItem PasteRClick;
     private javax.swing.JDialog PrintErrorDialog;
     private javax.swing.JPopupMenu RightClickPopUpMenu;
     private javax.swing.JMenuItem UndoRClick;
+    private javax.swing.JButton YesButton;
     private javax.swing.JFrame aboutFrame;
     private javax.swing.JMenuItem aboutInfo;
     private javax.swing.JLabel aboutLabel;
@@ -1013,6 +1083,7 @@ public class textEditor extends javax.swing.JFrame {
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
