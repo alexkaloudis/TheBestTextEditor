@@ -408,6 +408,8 @@ public class textEditor extends javax.swing.JFrame {
                 .addContainerGap(76, Short.MAX_VALUE))
         );
 
+        ChooseSaveOrNotDialog.setTitle("Do you want to save?");
+
         jLabel3.setText("Do you want to save any changes?");
 
         YesButton.setText("Yes");

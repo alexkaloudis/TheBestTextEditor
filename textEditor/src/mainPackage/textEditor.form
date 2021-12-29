@@ -381,6 +381,9 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JDialog" name="ChooseSaveOrNotDialog">
+      <Properties>
+        <Property name="title" type="java.lang.String" value="Do you want to save?"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
