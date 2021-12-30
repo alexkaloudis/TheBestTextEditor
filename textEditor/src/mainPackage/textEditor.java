@@ -222,6 +222,7 @@ public class textEditor extends javax.swing.JFrame {
         });
         RightClickPopUpMenu.add(DeleteRClick);
 
+        fontsFrame.setTitle("Fonts");
         fontsFrame.setMinimumSize(new java.awt.Dimension(400, 300));
         fontsFrame.setSize(new java.awt.Dimension(500, 450));
         fontsFrame.setType(java.awt.Window.Type.POPUP);
@@ -370,6 +371,7 @@ public class textEditor extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
+        aboutFrame.setTitle("About");
         aboutFrame.setSize(new java.awt.Dimension(500, 400));
 
         javax.swing.GroupLayout aboutFrameLayout = new javax.swing.GroupLayout(aboutFrame.getContentPane());
@@ -388,6 +390,7 @@ public class textEditor extends javax.swing.JFrame {
                 .addGap(0, 162, Short.MAX_VALUE))
         );
 
+        contactFrame.setTitle("Contact us");
         contactFrame.setForeground(java.awt.Color.black);
         contactFrame.setSize(new java.awt.Dimension(500, 400));
 
