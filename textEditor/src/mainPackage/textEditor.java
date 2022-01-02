@@ -848,7 +848,7 @@ public class textEditor extends javax.swing.JFrame {
         }
         
         int fontIdx =fontCB.getSelectedIndex();
-         
+        textHere.setFont(font[fontIdx]);
         //kryvoume to frame
         fontsFrame.setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed
