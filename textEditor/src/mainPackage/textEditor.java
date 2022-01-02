@@ -36,7 +36,8 @@ import javax.swing.text.StyledDocument;
 
 public class textEditor extends javax.swing.JFrame {
   UndoManager undoManager = new UndoManager();
-  //dhmiourgia pinaka Font
+  private String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+  //dhlwsh pinaka Font
   private Font []font;
   
     /**
@@ -50,9 +51,9 @@ public class textEditor extends javax.swing.JFrame {
         /*orismos ws arxikhs katastashs-->
         tou frame gia thn epilogh twn font*/
         fontsFrame.setVisible(false);
+        textHere.setEditorKit(new WrapEditorKit());
         textHere.getDocument().addUndoableEditListener(undoManager); //krataei thn allagh poy ginetai se periptosh pou theloume na kanoume undo
         font=new Font[fonts.length];
-        textHere.setEditorKit(new WrapEditorKit());
         aboutFrame.setVisible(false);
         aboutLabel.setText(   "<html> Το συγκεκριμένο text editor αποτελεί"
                             + "<br>ένα εργαλείο για απλή καθημερινή χρήση."
@@ -73,8 +74,6 @@ public class textEditor extends javax.swing.JFrame {
                             + "<br>"
                             + "<br>Καλούδης Αλέξανδρος"
                             + "<br>it185186@it.teithe.gr");
-        
-
     }
          
   
@@ -294,12 +293,6 @@ public class textEditor extends javax.swing.JFrame {
 
         findTextFrame.setTitle("Find");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Find what:");
 
         findTextFrameFindNextButton.setText("Find Next");
@@ -313,12 +306,6 @@ public class textEditor extends javax.swing.JFrame {
         FindTextFrameCancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FindTextFrameCancelButtonActionPerformed(evt);
-            }
-        });
-
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
             }
         });
 
@@ -586,7 +573,7 @@ public class textEditor extends javax.swing.JFrame {
         editMenu.add(deleteKey);
 
         FindKey.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        FindKey.setText("Find...");
+        FindKey.setText("Find and replace");
         FindKey.setEnabled(false);
         FindKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -702,12 +689,13 @@ public class textEditor extends javax.swing.JFrame {
             String fileName = jFileChooser1.getSelectedFile().getPath(); //tha apothikeusei sthn metavliti filename to arxeio me to path pou epileksame
                 try{
                     fs = new FileReader(fileName); 
-                    textHere.read(fs,null); //nul??
+                    textHere.read(fs,null);
                     setTitle(fileName); //allazei titlo symfona me to arxeio.Deixnei to plires path kai onoma toy arxeiou 
                     fs.close();
                     
                 } catch(IOException exc){
-                  // ErrorDialog1.showMessageDialog(exc.getMessage(),""); //pop up parathiro me exception alla den mporw na vrw pws leitourgei
+                  JOptionPane.showMessageDialog(super.rootPane, "Error",
+                    "textEditor", JOptionPane.ERROR_MESSAGE);
                 }
         }
           
@@ -725,7 +713,7 @@ public class textEditor extends javax.swing.JFrame {
                 textHere.write(fw); 
                 fw.close();
             }catch(IOException exc){
-                JOptionPane.showMessageDialog(super.rootPane, "exception was thrown",
+                JOptionPane.showMessageDialog(super.rootPane, "Error",
                 "textEditor", JOptionPane.ERROR_MESSAGE);//pop up parathiro me exception alla den mporw na vrw pws leitourgei
             }
         }
@@ -734,8 +722,8 @@ public class textEditor extends javax.swing.JFrame {
     private void printMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printMenuItemActionPerformed
         //Print file
         try {
-                boolean complete = textHere.print();
-                if (complete) {
+            boolean complete = textHere.print();
+            if (complete) {
                 /* show a success message  */
                 JOptionPane.showMessageDialog(super.rootPane, "The file was printed succefully",
                 "textEditor", JOptionPane.PLAIN_MESSAGE);
@@ -761,19 +749,19 @@ public class textEditor extends javax.swing.JFrame {
     private void copyKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyKeyActionPerformed
         //copy
         if(textHere.getSelectedText()!=null)
-            deleteKey.setEnabled(true);
+            copyKey.setEnabled(true);
         textHere.copy();
     }//GEN-LAST:event_copyKeyActionPerformed
 
     private void pasteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteKeyActionPerformed
-        //paste (na kanei paste ekei pou einai o kersoras)
+        //paste 
         textHere.paste();       
     }//GEN-LAST:event_pasteKeyActionPerformed
 
     private void deleteKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteKeyActionPerformed
         //delete
         if(textHere.getSelectedText()!=null)
-            copyKey.setEnabled(true);
+            deleteKey.setEnabled(true);
         textHere.setText(textHere.getText().replace(textHere.getSelectedText(),""));
     }//GEN-LAST:event_deleteKeyActionPerformed
 
@@ -793,7 +781,6 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_DeleteRClickActionPerformed
 
     private void PasteRClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasteRClickActionPerformed
-        /*diorthwse to wste na kanei paste ekei pou einai o kersoras*/
         //paste
         textHere.paste();
     }//GEN-LAST:event_PasteRClickActionPerformed
@@ -827,21 +814,14 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_fontItemActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        /*otan o xrhsths pataei to cancel tote to parathuro kleinei xwris na 
-        orisei kapoia allag sto keimeno*/
-        fontsFrame.setVisible(false);
+        fontsFrame.setVisible(false);//kruvei to frame
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
  
-        //pairnoume thn timh tou style combobox
-        String styleItem=styleCB.getSelectedItem().toString();
-        // pairnoume thn timh tou size combobox
-        int letterSize=Integer.parseInt(sizeCB.getSelectedItem().toString());
-        
-        /*loop ston pinaka me ta font Strings-->
-        gemisma tou pinaka font typou Font-->
-        me th vohtheia tou pinaka fonts typou String*/
+        String styleItem=styleCB.getSelectedItem().toString();//styl grammatoseiras
+        int letterSize=Integer.parseInt(sizeCB.getSelectedItem().toString());//mege8os grammatoseiras
+        //loop ston pinaka me ta font Strings
         for (int i=0;i<fonts.length;i++) {
             switch (styleItem) {
                 //metatroph se bold
@@ -868,26 +848,20 @@ public class textEditor extends javax.swing.JFrame {
         }
         
         int fontIdx =fontCB.getSelectedIndex();
-        
-        textHere.setFont(font[fontIdx]);
-        
+         
         //kryvoume to frame
         fontsFrame.setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here        
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void FindKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindKeyActionPerformed
-        // TODO add your handling code here:
+
         findTextFrame.setVisible(true);
         findTextFrame.setSize(400,200);
         
     }//GEN-LAST:event_FindKeyActionPerformed
 
     private void FindTextFrameCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindTextFrameCancelButtonActionPerformed
-        // TODO add your handling code here:
+
         findTextFrame.setVisible(false);
         
         
@@ -915,10 +889,6 @@ public class textEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_findTextFrameFindNextButtonActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
     private void replaceTextFrameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTextFrameButtonActionPerformed
         String findFromText = textHere.getText();
         String toFindText = jTextField1.getText();
@@ -934,8 +904,6 @@ public class textEditor extends javax.swing.JFrame {
         SimpleAttributeSet align= new SimpleAttributeSet();
         StyleConstants.setAlignment(align, StyleConstants.ALIGN_LEFT);
         style.setParagraphAttributes(0, style.getLength(), align, false);
-        MutableAttributeSet s = new SimpleAttributeSet();
-        StyleConstants.setForeground(s, Color.red);
         
         
     }//GEN-LAST:event_leftItemActionPerformed
@@ -994,19 +962,19 @@ public class textEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_contactItemActionPerformed
 
     private void YesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButtonActionPerformed
-        // TODO add your handling code here:
+        
         saveMenuItemActionPerformed(evt); // kalei thn save method gia na swseis to arxeio
         ChooseSaveOrNotDialog.dispose();
         //ChooseSaveOrNotDialog.setVisible(false);
     }//GEN-LAST:event_YesButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
-        // TODO add your handling code here:
+
         ChooseSaveOrNotDialog.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void NoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoButtonActionPerformed
-        // TODO add your handling code here:
+
         textHere.setText(null);
         ChooseSaveOrNotDialog.dispose();
     }//GEN-LAST:event_NoButtonActionPerformed
@@ -1064,10 +1032,7 @@ public class textEditor extends javax.swing.JFrame {
             }
         });
     }
-    /* dhlwsh enos pinaka typou String
-    pou gemizei me ta onomata twn diathesimwn
-    font pou einai diathesima sthn Java*/
-    private String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelButton;
     private javax.swing.JDialog ChooseSaveOrNotDialog;
