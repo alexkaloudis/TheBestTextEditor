@@ -5,9 +5,6 @@ package mainPackage;
 
 import javax.swing.text.BadLocationException;
 import java.awt.Color;
-//import java.awt.Component;
-//import javax.swing.event.UndoableEditListener;
-//import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import java.awt.print.PrinterException;
 import java.io.FileReader; //eisagwgh aparatetiton vivliothikon
@@ -22,12 +19,15 @@ import java.awt.GraphicsEnvironment;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
-import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -39,7 +39,7 @@ public class textEditor extends javax.swing.JFrame {
   private String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   //dhlwsh pinaka Font
   private Font []font;
-  
+  private Highlighter.HighlightPainter MyHighlighter= new MyHighlightPainter(Color.yellow);
     /**
      * Creates new form textEditor
      */
@@ -292,10 +292,15 @@ public class textEditor extends javax.swing.JFrame {
         fontsFrame.getContentPane().add(okButton, gridBagConstraints);
 
         findTextFrame.setTitle("Find");
+        findTextFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                findTextFrameWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Find what:");
 
-        findTextFrameFindNextButton.setText("Find Next");
+        findTextFrameFindNextButton.setText("Find match");
         findTextFrameFindNextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 findTextFrameFindNextButtonActionPerformed(evt);
@@ -458,6 +463,7 @@ public class textEditor extends javax.swing.JFrame {
         scroll.setPreferredSize(new java.awt.Dimension(800, 1000));
 
         textHere.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 0, 0), new java.awt.Color(102, 102, 102)));
+        textHere.setAutoscrolls(false);
         textHere.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         textHere.setMargin(new java.awt.Insets(100, 100, 100, 100));
         textHere.setMaximumSize(new java.awt.Dimension(800, 1100));
@@ -470,6 +476,9 @@ public class textEditor extends javax.swing.JFrame {
             }
         });
         textHere.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                textHereKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 textHereKeyTyped(evt);
             }
@@ -709,7 +718,7 @@ public class textEditor extends javax.swing.JFrame {
         if(saveFile == JFileChooser.APPROVE_OPTION){
             File fileName = jFileChooser1.getSelectedFile();              
             try{
-                fw = new FileWriter(fileName);
+                fw = new FileWriter(fileName+".txt");
                 textHere.write(fw); 
                 fw.close();
             }catch(IOException exc){
@@ -862,39 +871,41 @@ public class textEditor extends javax.swing.JFrame {
 
     private void FindTextFrameCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindTextFrameCancelButtonActionPerformed
 
+        textHere.getHighlighter().removeAllHighlights();
         findTextFrame.setVisible(false);
-        
-        
-    }//GEN-LAST:event_FindTextFrameCancelButtonActionPerformed
 
-    int currentPointer=0;
+    }//GEN-LAST:event_FindTextFrameCancelButtonActionPerformed
+    
+    
+    public void highlight(JTextComponent txt,String pattern){
+          
+      try {
+            Highlighter highlight=txt.getHighlighter();
+            Document doc=txt.getDocument();
+            String text= doc.getText(0,doc.getLength());
+            int pos=0;
+            while((pos=text.indexOf(pattern,pos))>=0){
+                highlight.addHighlight(pos, pos+pattern.length(), MyHighlighter);
+                pos+=pattern.length();
+            }    
+      } catch (BadLocationException ex) {
+          Logger.getLogger(textEditor.class.getName()).log(Level.SEVERE, null, ex);
+      }
+        
+    }
+
     private void findTextFrameFindNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextFrameFindNextButtonActionPerformed
-        // TODO add your handling code here:       
-        String findFromText = textHere.getText(); // bazoume se metaviliti to keimeno
-        String toFindText = jTextField1.getText(); // bazoume thn leksi poy psaxnoume      
-        int indexOf = findFromText.indexOf(toFindText,currentPointer);
-        int length = toFindText.length();
-        Highlighter h = textHere.getHighlighter();
-        h.removeAllHighlights();
-        try{
-            h.addHighlight(indexOf, indexOf + length, new DefaultHighlighter.DefaultHighlightPainter(Color.yellow));
-        }
-        catch(BadLocationException ex){}
-        currentPointer = indexOf + length;
-        if(currentPointer >= findFromText.length()){
-            currentPointer = 0;
-        }
-        if(findFromText.indexOf(toFindText,currentPointer)== -1){
-            currentPointer=0;
-        }
+        
+        highlight(textHere,jTextField1.getText());
     }//GEN-LAST:event_findTextFrameFindNextButtonActionPerformed
 
     private void replaceTextFrameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTextFrameButtonActionPerformed
         String findFromText = textHere.getText();
         String toFindText = jTextField1.getText();
         String withReplaceText =jTextField2.getText();
-        textHere.setText(findFromText.replaceFirst(toFindText, withReplaceText));
-        currentPointer=0;
+        textHere.setText(findFromText.replaceAll(toFindText, withReplaceText));
+        textHere.getHighlighter().removeAllHighlights();
+        //currentPointer=0;
     }//GEN-LAST:event_replaceTextFrameButtonActionPerformed
 
     private void leftItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftItemActionPerformed
@@ -965,7 +976,8 @@ public class textEditor extends javax.swing.JFrame {
         
         saveMenuItemActionPerformed(evt); // kalei thn save method gia na swseis to arxeio
         ChooseSaveOrNotDialog.dispose();
-        //ChooseSaveOrNotDialog.setVisible(false);
+        setTitle("");
+        textHere.setText(null); 
     }//GEN-LAST:event_YesButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
@@ -977,6 +989,7 @@ public class textEditor extends javax.swing.JFrame {
 
         textHere.setText(null);
         ChooseSaveOrNotDialog.dispose();
+        setTitle("");
     }//GEN-LAST:event_NoButtonActionPerformed
 
     private void textHereKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textHereKeyTyped
@@ -995,6 +1008,27 @@ public class textEditor extends javax.swing.JFrame {
             FindKey.setEnabled(false);
         }
     }//GEN-LAST:event_textHereKeyTyped
+
+    private void textHereKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textHereKeyPressed
+        // TODO add your handling code here:
+                if(!textHere.getText().equals("")){
+            undoKey.setEnabled(true);
+            cutKey.setEnabled(true);
+            copyKey.setEnabled(true);
+            deleteKey.setEnabled(true);
+            FindKey.setEnabled(true);
+        }else{
+            undoKey.setEnabled(false);
+            cutKey.setEnabled(false);
+            copyKey.setEnabled(false);
+            deleteKey.setEnabled(false);
+            FindKey.setEnabled(false);
+        }
+    }//GEN-LAST:event_textHereKeyPressed
+
+    private void findTextFrameWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_findTextFrameWindowClosing
+         textHere.getHighlighter().removeAllHighlights();
+    }//GEN-LAST:event_findTextFrameWindowClosing
 
     /**
      * @param args the command line arguments

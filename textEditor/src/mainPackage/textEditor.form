@@ -212,6 +212,9 @@
       <Properties>
         <Property name="title" type="java.lang.String" value="Find"/>
       </Properties>
+      <Events>
+        <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="findTextFrameWindowClosing"/>
+      </Events>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -273,7 +276,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="findTextFrameFindNextButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Find Next"/>
+            <Property name="text" type="java.lang.String" value="Find match"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="findTextFrameFindNextButtonActionPerformed"/>
@@ -742,6 +745,7 @@
                 </EtchetBorder>
               </Border>
             </Property>
+            <Property name="autoscrolls" type="boolean" value="false"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
               <Color id="Text Cursor"/>
             </Property>
@@ -761,6 +765,7 @@
           </Properties>
           <Events>
             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="textHereMouseReleased"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textHereKeyPressed"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textHereKeyTyped"/>
           </Events>
         </Component>
